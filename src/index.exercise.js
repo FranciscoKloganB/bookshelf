@@ -19,8 +19,12 @@ function App(props) {
     <div>
       <Logo />
       <h1>Bookshelf</h1>
-      <button onClick={handleLoginClick}>Login</button>
-      <button onClick={handleRegisterClick}>Register</button>
+      <div>
+        <button onClick={handleLoginClick}>Login</button>
+      </div>
+      <div>
+        <button onClick={handleRegisterClick}>Register</button>
+      </div>
     </div>
   )
 }
