@@ -2,7 +2,10 @@
 
 ## 📝 Your Notes
 
-Elaborate on your learnings here in `INSTRUCTIONS.md`
+For the first exercise, I had to bootstrap a react app, by constructing the App
+component and mounting it on the DOM root, using `ReactDOM`. As extra credits
+I created a modal using `Reach UI` component `Dialog`, which in short is used
+for authentication (login and register) flows, by consuming user inputs.
 
 ## Background
 
