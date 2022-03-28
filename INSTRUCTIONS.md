@@ -79,7 +79,7 @@ const Box = styled.div`
 There's lot more you can do with creating styled components, but that should get
 you going for this exercise.
 
-📜 https://emotion.sh/docs/styled
+📜 <https://emotion.sh/docs/styled>
 
 ### Using emotion's css prop
 
@@ -149,7 +149,7 @@ function SomeComponent() {
 With the relevant styles being generated and inserted into a stylesheet to make
 this all work.
 
-📜 https://emotion.sh/docs/css-prop
+📜 <https://emotion.sh/docs/css-prop>
 
 > If the `/** @jsx jsx */` thing is annoying to you, then you can also install
 > and configure a
@@ -226,8 +226,8 @@ Once you've done that, then all your class names should have a label!
 
 📜 Learn more about macros:
 
-- https://emotion.sh/docs/babel-macros
-- https://github.com/kentcdodds/babel-plugin-macros
+- <https://emotion.sh/docs/babel-macros>
+- <https://github.com/kentcdodds/babel-plugin-macros>
 
 **Files:**
 
@@ -237,7 +237,7 @@ Once you've done that, then all your class names should have a label!
 
 [Production deploy](https://exercises-02-styles.bookshelf.lol/extra-2)
 
-Emotion has a fantastic theming API (📜 https://emotion.sh/docs/theming) which
+Emotion has a fantastic theming API (📜 <https://emotion.sh/docs/theming>) which
 is great for when users can change the theme of the app on the fly. You can also
 use CSS Variables if you like.
 
@@ -267,7 +267,7 @@ import * as mq from 'styles/media-queries'
 // `
 ```
 
-📜 https://emotion.sh/docs/media-queries
+📜 <https://emotion.sh/docs/media-queries>
 
 **Files:**
 
@@ -289,9 +289,9 @@ import {FaSpinner} from 'react-icons/fa'
 // const Spinner = styled(FaSpinner)({/* styles here */})
 ```
 
-📜 https://emotion.sh/docs/keyframes
+📜 <https://emotion.sh/docs/keyframes>
 
-💰 https://stackoverflow.com/a/14859567/971592
+💰 <https://stackoverflow.com/a/14859567/971592>
 
 **Files:**
 
@@ -303,4 +303,4 @@ import {FaSpinner} from 'react-icons/fa'
 After the instruction, if you want to remember what you've just learned, then
 fill out the elaboration and feedback form:
 
-https://ws.kcd.im/?ws=Build%20React%20Apps&e=02%3A%20Style%20React%20Components&em=
+<https://ws.kcd.im/?ws=Build%20React%20Apps&e=02%3A%20Style%20React%20Components&em>=
