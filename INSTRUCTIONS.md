@@ -2,7 +2,12 @@
 
 ## 📝 Your Notes
 
-Elaborate on your learnings here in `INSTRUCTIONS.md`
+Throughout exercise 2, I have learned to create `Emotion` styled components and
+how to use `css` property provided by `Emotion` when using `jsx` to create
+components instead of `ReactDOM.createElement` function. Other than that, we
+created two modules to manage the project's colors and media-queries to ensure
+consistency. It is worth noting that `Emotion` also provides a `ThemeProvider`
+context and a easy way to change themes using `useTheme` hooks.
 
 ## Background
 
