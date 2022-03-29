@@ -14,9 +14,10 @@ import * as React from 'react'
 import ReactDOM from 'react-dom'
 
 // 🐨 you'll need to import some new components that you'll be creating in this file
-import {FormGroup} from './components/FormGroup'
+import { FormGroup } from './components/FormGroup'
 import { Button } from './components/Button'
 import { Input } from './components/Input'
+import { Spinner } from './components/LoadingSpinner'
 
 import {Modal, ModalContents, ModalOpenButton} from './components/modal'
 import {Logo} from './components/logo'
@@ -61,6 +62,7 @@ function LoginForm({onSubmit, submitButton}) {
       <FormGroup>
         <label htmlFor="username">Username</label>
         <Input id="username" />
+        <Spinner area-label="loading"/>
       </FormGroup>
       <FormGroup>
         <label htmlFor="password">Password</label>
