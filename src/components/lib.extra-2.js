@@ -6,7 +6,7 @@ import * as mq from 'styles/media-queries'
 const buttonVariants = {
   primary: {
     background: colors.indigo,
-    color: colors.base,
+    color: colors.text,
   },
   secondary: {
     background: colors.gray,

@@ -1,18 +1,18 @@
 import styled from '@emotion/styled/macro'
-import {primaryColor, secondaryColor, dangerColor} from './palette'
+import * as colors from 'styles/colors'
 
 const buttonVariant = {
   primary: {
-    background: primaryColor,
-    color: 'white',
+    background: colors.indigo,
+    color: colors.base,
   },
   secondary: {
-    background: secondaryColor,
-    color: 'white',
+    background: colors.gray,
+    color: colors.text,
   },
   danger: {
-    background: dangerColor,
-    color: 'white',
+    background: colors.danger,
+    color: colors.base,
   },
 }
 

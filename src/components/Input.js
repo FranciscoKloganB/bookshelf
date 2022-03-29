@@ -1,15 +1,15 @@
 import styled from '@emotion/styled/macro'
-import { primaryColor, secondaryColor, dangerColor } from './palette'
+import * as colors from 'styles/colors'
 
 const inputVariant = {
   primary: {
-    borderColor: primaryColor,
+    borderColor: colors.indigo,
   },
   secondary: {
-    borderColor: secondaryColor,
+    borderColor: colors.text,
   },
   danger: {
-    borderColor: dangerColor,
+    borderColor: colors.danger,
   },
 }
 
@@ -18,7 +18,7 @@ const inputVariant = {
 export const Input = styled.input(
   {
     borderRadius: '8px',
-    borderWidth: '2px',
+    borderWidth: '1px',
     background: 'white',
     height: '30px',
     padding: '8px 12px',
