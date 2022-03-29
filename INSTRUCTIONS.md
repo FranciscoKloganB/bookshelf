@@ -74,7 +74,7 @@ recommend to do all your side effects inside the `useEffect`. This is because in
 the event handler you don't have any possibility to prevent race conditions, or
 to implement any cancellation mechanism.
 
-📜 https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+📜 <https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch>
 
 ## Exercise
 
@@ -194,4 +194,4 @@ your co-worker's `useAsync` hook.
 After the instruction, if you want to remember what you've just learned, then
 fill out the elaboration and feedback form:
 
-https://ws.kcd.im/?ws=Build%20React%20Apps&e=03%3A%20Make%20HTTP%20Requests&em=
+<https://ws.kcd.im/?ws=Build%20React%20Apps&e=03%3A%20Make%20HTTP%20Requests&em>=
