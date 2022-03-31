@@ -10,7 +10,10 @@ import {client} from './utils/api-client'
 import {useAsync} from 'utils/hooks'
 import * as colors from './styles/colors'
 
-function DiscoverBooksContent({data, isSuccess}) {
+function DiscoverBooksContent({data, error, isError, isSuccess}) {
+
+  console.log(data, error, isError, isSuccess)
+
   if (isSuccess) {
     return data?.books?.length ? (
       <BookListUL css={{marginTop: 20}}>
@@ -22,6 +25,15 @@ function DiscoverBooksContent({data, isSuccess}) {
       </BookListUL>
     ) : (
       <p>No books found. Try another search.</p>
+    )
+  }
+
+  if (isError) {
+    return (
+      <div css={{color: colors.danger}}>
+        <p>There was an error:</p>
+        <pre>{error.message}</pre>
+      </div>
     )
   }
 
@@ -86,7 +98,12 @@ function DiscoverBooksScreen() {
           </label>
         </Tooltip>
       </form>
-      <DiscoverBooksContent data={data} isSuccess={isSuccess} />
+      <DiscoverBooksContent
+        data={data}
+        error={error}
+        isError={isError}
+        isSuccess={isSuccess}
+      />
     </div>
   )
 }
