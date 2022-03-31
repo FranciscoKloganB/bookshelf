@@ -7,12 +7,10 @@ import {FaSearch, FaTimes} from 'react-icons/fa'
 import {Input, BookListUL, Spinner} from './components/lib'
 import {BookRow} from './components/book-row'
 import {client} from './utils/api-client'
+import {useAsync} from 'utils/hooks'
 import * as colors from './styles/colors'
 
-function DiscoverBooksContent({ data, status }) {
-  const isSuccess = status === 'success'
-  const isError = status === 'error'
-
+function DiscoverBooksContent({data, isSuccess}) {
   if (isSuccess) {
     return data?.books?.length ? (
       <BookListUL css={{marginTop: 20}}>
@@ -27,19 +25,13 @@ function DiscoverBooksContent({ data, status }) {
     )
   }
 
-  if (isError) {
-    return <FaTimes aria-label="error" css={{color: colors.danger}} />
-  }
-
   return null
 }
 
 function DiscoverBooksScreen() {
-  // 🐨 add state for status ('idle', 'loading', or 'success'), data, and query
-  const [data, setData] = React.useState(null)
+  const {data, error, run, isLoading, isError, isSuccess} = useAsync()
   const [query, setQuery] = React.useState(null)
   const [queried, setQueried] = React.useState(false)
-  const [status, setStatus] = React.useState('idle')
 
   // 🐨 Add a useEffect callback here for making the request with the client and updating the status and data.
   React.useEffect(() => {
@@ -48,21 +40,9 @@ function DiscoverBooksScreen() {
       return
     }
 
-    setStatus('loading')
-    client(`books?query=${encodeURIComponent(query)}`)
-      .then(result => {
-        setData(result)
-        setStatus('success')
-      })
-      .catch(e => {
-        console.log('Unable to fetch books', e?.message)
-        setStatus('error')
-      })
+    run(client(`books?query=${encodeURIComponent(query)}`))
     // 🐨 remember, effect callbacks are called on the initial render too
-  }, [queried, query])
-
-  // 🐨 replace these with derived state values based on the status.
-  const isLoading = status === 'loading'
+  }, [queried, query, run])
 
   function handleSearchSubmit(event) {
     // 🐨 call preventDefault on the event so you don't get a full page reload
@@ -95,12 +75,18 @@ function DiscoverBooksScreen() {
                 background: 'transparent',
               }}
             >
-              {isLoading ? <Spinner /> : <FaSearch aria-label="search" />}
+              {isLoading ? (
+                <Spinner />
+              ) : isError ? (
+                <FaTimes aria-label="error" css={{color: colors.danger}} />
+              ) : (
+                <FaSearch aria-label="search" />
+              )}
             </button>
           </label>
         </Tooltip>
       </form>
-      <DiscoverBooksContent data={data} status={status} />
+      <DiscoverBooksContent data={data} isSuccess={isSuccess} />
     </div>
   )
 }

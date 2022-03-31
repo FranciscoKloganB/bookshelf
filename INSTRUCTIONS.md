@@ -2,7 +2,12 @@
 
 ## 📝 Your Notes
 
-Elaborate on your learnings here in `INSTRUCTIONS.md`
+In this exercise we practised asynchronous requests using a combination of
+multiple `React.useState` and `React.useEffect` along with the usage of an
+async function defined in a regular JavaScript module, outside the component
+file. Eventually, we replaced out functionality and implemented it reusing the
+exercise provided `useAsync` hook. Which we also implemented back in workshop
+number 2.
 
 ## Background
 
