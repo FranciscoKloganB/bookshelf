@@ -3,10 +3,36 @@ import {jsx} from '@emotion/core'
 
 import * as React from 'react'
 import Tooltip from '@reach/tooltip'
-import {FaSearch} from 'react-icons/fa'
+import {FaSearch, FaTimes} from 'react-icons/fa'
 import {Input, BookListUL, Spinner} from './components/lib'
 import {BookRow} from './components/book-row'
 import {client} from './utils/api-client'
+import * as colors from './styles/colors'
+
+function DiscoverBooksContent({ data, status }) {
+  const isSuccess = status === 'success'
+  const isError = status === 'error'
+
+  if (isSuccess) {
+    return data?.books?.length ? (
+      <BookListUL css={{marginTop: 20}}>
+        {data.books.map(book => (
+          <li key={book.id} aria-label={book.title}>
+            <BookRow key={book.id} book={book} />
+          </li>
+        ))}
+      </BookListUL>
+    ) : (
+      <p>No books found. Try another search.</p>
+    )
+  }
+
+  if (isError) {
+    return <FaTimes aria-label="error" css={{color: colors.danger}} />
+  }
+
+  return null
+}
 
 function DiscoverBooksScreen() {
   // 🐨 add state for status ('idle', 'loading', or 'success'), data, and query
@@ -37,7 +63,6 @@ function DiscoverBooksScreen() {
 
   // 🐨 replace these with derived state values based on the status.
   const isLoading = status === 'loading'
-  const isSuccess = status === 'success'
 
   function handleSearchSubmit(event) {
     // 🐨 call preventDefault on the event so you don't get a full page reload
@@ -75,20 +100,7 @@ function DiscoverBooksScreen() {
           </label>
         </Tooltip>
       </form>
-
-      {isSuccess ? (
-        data?.books?.length ? (
-          <BookListUL css={{marginTop: 20}}>
-            {data.books.map(book => (
-              <li key={book.id} aria-label={book.title}>
-                <BookRow key={book.id} book={book} />
-              </li>
-            ))}
-          </BookListUL>
-        ) : (
-          <p>No books found. Try another search.</p>
-        )
-      ) : null}
+      <DiscoverBooksContent data={data} status={status} />
     </div>
   )
 }
