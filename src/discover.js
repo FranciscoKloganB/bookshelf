@@ -1,6 +1,7 @@
 // export * from './discover.final'
 
-export * from './discover.exercise'
+// export * from './discover.exercise'
+export * from './discover.exercise.extra-2'
 
 // 💯 handle failed requests
 // export * from './discover.extra-1'
