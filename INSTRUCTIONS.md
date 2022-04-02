@@ -2,7 +2,13 @@
 
 ## 📝 Your Notes
 
-Elaborate on your learnings here in `INSTRUCTIONS.md`
+For today's lesson we setup routing in our application using `react-router-dom`.
+We replaced some `anchor` elements with `Link`, ocasionally used a styled `Link`
+over the original `react-router-dom.Link`. We used `Router` and `Routes` among
+others to wire all this up.
+
+We also learned that client-side redirects ding us regarding `SEO` because
+client side redirects do not return the correct status codes!
 
 ## Background
 
