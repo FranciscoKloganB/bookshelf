@@ -2,7 +2,15 @@
 
 ## 📝 Your Notes
 
-Elaborate on your learnings here in `INSTRUCTIONS.md`
+For this exercise we practised user "sessions" using dummy JWT tokens. We
+included functionality to automatically log the user in, if he has a valid
+JWT token in his browser localStorage, after a page refresh or re-visit and we
+also do simple, yet erroneous session invalidation when a `HTTP 401` is returned
+as a response to any of our remote requests.
+
+To accomplish what is outlined above, we first used a combination of
+`React.useState` and `React.useEffect` with asynchronous functions, but then
+we migrated that logic to our already existing `useAsync` hook.
 
 ## Background
 
