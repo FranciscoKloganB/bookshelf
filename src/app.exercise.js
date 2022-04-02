@@ -6,10 +6,30 @@ import * as React from 'react'
 import * as auth from 'auth-provider'
 import {AuthenticatedApp} from './authenticated-app'
 import {UnauthenticatedApp} from './unauthenticated-app'
+import {client} from 'utils/api-client.exercise'
+
+async function getUser() {
+  const token = await auth.getToken()
+
+  if (token) {
+    return await client('me', {token})
+  }
+
+  return null
+}
 
 function App() {
   // 🐨 useState for the user
   const [user, setUser] = React.useState(null)
+
+  React.useEffect(() => {
+    getUser()
+      .then(u => setUser(u))
+      .catch(e => {
+        console.log(e?.message)
+        setUser(null)
+      })
+  }, [])
 
   // 🐨 create a login function that calls auth.login then sets the user
   // 💰 const login = form => auth.login(form).then(u => setUser(u))
