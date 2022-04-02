@@ -8,7 +8,12 @@ over the original `react-router-dom.Link`. We used `Router` and `Routes` among
 others to wire all this up.
 
 We also learned that client-side redirects ding us regarding `SEO` because
-client side redirects do not return the correct status codes!
+client side redirects do not return the correct status codes! We need to set
+them up on our `CDN` (in this case netlify), on our `development` server and
+our `production distrubtion` (local or otherwise).
+
+Last but not least, we learned that `emotion.sh` `css` prop can accept an array
+of styling objects. We use this to decorate the active navlink conditionally.
 
 ## Background
 
