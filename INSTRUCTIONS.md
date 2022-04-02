@@ -76,7 +76,6 @@ function App({tweetId}) {
 
 - `useQuery`: https://react-query-v2.tanstack.com/docs/guides/queries
 - `useMutation`: https://react-query-v2.tanstack.com/docs/guides/mutations
-
 That should be enough to get you going.
 
 ## Exercise
