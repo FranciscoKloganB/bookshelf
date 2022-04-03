@@ -5,7 +5,7 @@ import {jsx} from '@emotion/core'
 // 🐨 and client from 'utils/api-client'
 import {BookListUL} from './lib'
 import {BookRow} from './book-row'
-import { useListItems } from 'hooks/list-items'
+import {useListItems} from 'hooks/list-items'
 
 function ListItemList({
   user,
@@ -19,7 +19,7 @@ function ListItemList({
   if (!listItems?.length) {
     return <div css={{marginTop: '1em', fontSize: '1.2em'}}>{noListItems}</div>
   }
-  
+
   if (!filteredListItems.length) {
     return (
       <div css={{marginTop: '1em', fontSize: '1.2em'}}>
