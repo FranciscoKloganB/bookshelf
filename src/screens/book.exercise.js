@@ -2,16 +2,14 @@
 import {jsx} from '@emotion/core'
 
 import * as React from 'react'
+import * as mq from 'styles/media-queries'
+import * as colors from 'styles/colors'
 import debounceFn from 'debounce-fn'
 import {FaRegCalendarAlt} from 'react-icons/fa'
 import Tooltip from '@reach/tooltip'
 import {useParams} from 'react-router-dom'
-// 🐨 you'll need these:
-import {useMutation, queryCache} from 'react-query'
-import {client} from 'utils/api-client'
+import {useListItemUpdateMutation} from 'hooks/list-items'
 import {formatDate} from 'utils/misc'
-import * as mq from 'styles/media-queries'
-import * as colors from 'styles/colors'
 import {Textarea} from 'components/lib'
 import {Rating} from 'components/rating'
 import {StatusButtons} from 'components/status-buttons'
@@ -21,7 +19,7 @@ import {useListItem} from 'hooks/list-items'
 function BookScreen({user}) {
   const {bookId} = useParams()
 
-  const { book } = useBook(bookId, user)
+  const {book} = useBook(bookId, user)
   const listItem = useListItem(user, bookId)
 
   const {title, author, coverImageUrl, publisher, synopsis} = book
@@ -105,8 +103,6 @@ function ListItemTimeframe({listItem}) {
   )
 }
 
-const onSettled = () => queryCache.invalidateQueries('list-items')
-
 function NotesTextarea({listItem, user}) {
   // 🐨 call useMutation here
   // the mutate function should call the list-items/:listItemId endpoint with a PUT
@@ -116,15 +112,7 @@ function NotesTextarea({listItem, user}) {
   // the use the `onSettled` config option to queryCache.invalidateQueries('list-items')
   // 💣 DELETE THIS ESLINT IGNORE!! Don't ignore the exhaustive deps rule please
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const [update] = useMutation(
-    updates =>
-      client(`list-items/${updates.id}`, {
-        data: updates,
-        method: 'PUT',
-        token: user.token,
-      }),
-    {onSettled},
-  )
+  const update = useListItemUpdateMutation(user)
 
   const debouncedMutate = React.useMemo(
     () => debounceFn(update, {wait: 300}),

@@ -10,14 +10,15 @@ import {
   FaTimesCircle,
 } from 'react-icons/fa'
 import Tooltip from '@reach/tooltip'
-// 🐨 you'll need useQuery, useMutation, and queryCache from 'react-query'
-import {useMutation, queryCache} from 'react-query'
-// 🐨 you'll also need client from 'utils/api-client'
-import {client} from 'utils/api-client'
 import {useAsync} from 'utils/hooks'
 import * as colors from 'styles/colors'
 import {CircleButton, Spinner} from './lib'
-import { useListItem } from 'hooks/list-items'
+import {
+  useListItem,
+  useListItemUpdateMutation,
+  useListItemCreateMutation,
+  useListItemRemoveMutation,
+} from 'hooks/list-items'
 
 function TooltipButton({label, highlight, onClick, icon, ...rest}) {
   const {isLoading, isError, error, run} = useAsync()
@@ -50,40 +51,11 @@ function TooltipButton({label, highlight, onClick, icon, ...rest}) {
   )
 }
 
-const onSettled = () => queryCache.invalidateQueries('list-items')
-
 function StatusButtons({user, book}) {
   const listItem = useListItem(user, book.id)
-
-  // 🐨 call useMutation here and assign the mutate function to "update"
-  // the mutate function should call the list-items/:listItemId endpoint with a PUT
-  //   and the updates as data. The mutate function will be called with the updates
-  //   you can pass as data.
-  const [update] = useMutation(
-    updates =>
-      client(`list-items/${updates.id}`, {
-        data: updates,
-        method: 'PUT',
-        token: user.token,
-      }),
-    {onSettled},
-  )
-
-  // 🐨 call useMutation here and assign the mutate function to "remove"
-  // the mutate function should call the list-items/:listItemId endpoint with a DELETE
-  const [remove] = useMutation(
-    bookId =>
-      client(`list-items/${bookId}`, {method: 'DELETE', token: user.token}),
-    {onSettled},
-  )
-
-  // 🐨 call useMutation here and assign the mutate function to "create"
-  // the mutate function should call the list-items endpoint with a POST
-  // and the bookId the listItem is being created for.
-  const [create] = useMutation(
-    bookId => client(`list-items`, {data: {bookId}, token: user.token}),
-    {onSettled},
-  )
+  const update = useListItemUpdateMutation(user)
+  const create = useListItemCreateMutation(user)
+  const remove = useListItemRemoveMutation(user)
 
   function markAsUnread() {
     return update({id: listItem.id, finishDate: null})
