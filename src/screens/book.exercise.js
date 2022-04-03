@@ -7,7 +7,7 @@ import {FaRegCalendarAlt} from 'react-icons/fa'
 import Tooltip from '@reach/tooltip'
 import {useParams} from 'react-router-dom'
 // 🐨 you'll need these:
-import {useQuery, useMutation, queryCache} from 'react-query'
+import {useMutation, queryCache} from 'react-query'
 import {client} from 'utils/api-client'
 import {formatDate} from 'utils/misc'
 import * as mq from 'styles/media-queries'
@@ -16,17 +16,13 @@ import {Textarea} from 'components/lib'
 import {Rating} from 'components/rating'
 import {StatusButtons} from 'components/status-buttons'
 import {useBook} from 'hooks/book'
+import {useListItem} from 'hooks/list-items'
 
 function BookScreen({user}) {
   const {bookId} = useParams()
 
   const { book } = useBook(bookId, user)
-
-  const {data: listItems} = useQuery('list-items', () =>
-    client('list-items', {token: user.token}).then(data => data.listItems),
-  )
-  // 🐨 search through the listItems you got from react-query and find the one with the right bookId.
-  const listItem = listItems?.find(item => item.bookId === book.id)
+  const listItem = useListItem(user, bookId)
 
   const {title, author, coverImageUrl, publisher, synopsis} = book
 
