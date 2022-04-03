@@ -53,9 +53,9 @@ function TooltipButton({label, highlight, onClick, icon, ...rest}) {
 
 function StatusButtons({user, book}) {
   const listItem = useListItem(user, book.id)
-  const update = useListItemUpdateMutation(user)
-  const create = useListItemCreateMutation(user)
-  const remove = useListItemRemoveMutation(user)
+  const [update] = useListItemUpdateMutation(user)
+  const [create] = useListItemCreateMutation(user)
+  const [remove] = useListItemRemoveMutation(user)
 
   function markAsUnread() {
     return update({id: listItem.id, finishDate: null})

@@ -4,7 +4,7 @@ import {client} from 'utils/api-client'
 const onSettled = () => queryCache.invalidateQueries('list-items')
 
 export function useListItemUpdateMutation(user) {
-  const [update] = useMutation(
+  return useMutation(
     updates =>
       client(`list-items/${updates.id}`, {
         data: updates,
@@ -13,25 +13,19 @@ export function useListItemUpdateMutation(user) {
       }),
     {onSettled},
   )
-
-  return update
 }
 
 export function useListItemCreateMutation(user) {
-  const [create] = useMutation(
+  return useMutation(
     bookId => client(`list-items`, {data: {bookId}, token: user.token}),
     {onSettled},
   )
-
-  return create
 }
 
 export function useListItemRemoveMutation(user) {
-  const [remove] = useMutation(
+  return useMutation(
     bookId =>
       client(`list-items/${bookId}`, {method: 'DELETE', token: user.token}),
     {onSettled},
   )
-
-  return remove
 }
