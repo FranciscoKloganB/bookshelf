@@ -15,33 +15,13 @@ import * as colors from 'styles/colors'
 import {Textarea} from 'components/lib'
 import {Rating} from 'components/rating'
 import {StatusButtons} from 'components/status-buttons'
-import bookPlaceholderSvg from 'assets/book-placeholder.svg'
-
-const loadingBook = {
-  title: 'Loading...',
-  author: 'loading...',
-  coverImageUrl: bookPlaceholderSvg,
-  publisher: 'Loading Publishing',
-  synopsis: 'Loading...',
-  loadingBook: true,
-}
+import {useBook} from 'hooks/book'
 
 function BookScreen({user}) {
   const {bookId} = useParams()
 
-  // 🐨 call useQuery here
-  // queryKey should be ['book', {bookId}]
-  // queryFn should be what's currently passed in the run function below
-  const {data: book = loadingBook} = useQuery(['book', {bookId}], () =>
-    client(`books/${bookId}`, {token: user.token}).then(data => data.book),
-  )
+  const { book } = useBook(bookId, user)
 
-  // 🐨 call useQuery to get the list item from the list-items endpoint
-  // queryKey should be 'list-items'
-  // queryFn should call the 'list-items' endpoint with the user's token
-  // 🦉 NOTE: the backend doesn't support getting a single list-item by it's ID
-  // and instead expects us to cache all the list items and look them up in our
-  // cache. This works out because we're using react-query for caching!
   const {data: listItems} = useQuery('list-items', () =>
     client('list-items', {token: user.token}).then(data => data.listItems),
   )
