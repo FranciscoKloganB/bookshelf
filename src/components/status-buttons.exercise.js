@@ -49,9 +49,7 @@ function TooltipButton({label, highlight, onClick, icon, ...rest}) {
   )
 }
 
-const listItemOnSettledCallback = {
-  onSettled: () => queryCache.invalidateQueries('list-items'),
-}
+const onSettled = () => queryCache.invalidateQueries('list-items')
 
 function StatusButtons({user, book}) {
   // 🐨 call useQuery here to get the listItem (if it exists)
@@ -79,50 +77,38 @@ function StatusButtons({user, book}) {
         method: 'PUT',
         token: user.token,
       }),
-    listItemOnSettledCallback,
+    {onSettled},
   )
 
   // 🐨 call useMutation here and assign the mutate function to "remove"
   // the mutate function should call the list-items/:listItemId endpoint with a DELETE
-  const [remove] = useMutation(({id}) =>
-    client(
-      `list-items/${id}`,
-      {
-        method: 'DELETE',
-        token: user.token,
-      },
-      listItemOnSettledCallback,
-    ),
+  const [remove] = useMutation(
+    id => client(`list-items/${id}`, {method: 'DELETE', token: user.token}),
+    {onSettled},
   )
 
   // 🐨 call useMutation here and assign the mutate function to "create"
   // the mutate function should call the list-items endpoint with a POST
   // and the bookId the listItem is being created for.
   const [create] = useMutation(
-    ({bookId}) =>
-      client(`list-items`, {
-        data: {
-          bookId,
-        },
-        token: user.token,
-      }),
-    listItemOnSettledCallback,
+    bookId => client(`list-items`, {data: {bookId}, token: user.token}),
+    {onSettled},
   )
 
   function markAsUnread() {
-    update({id: listItem.id, finishDate: null})
+    return update({id: listItem.id, finishDate: null})
   }
 
   function markAsRead() {
-    update({id: listItem.id, finishDate: Date.now()})
+    return update({id: listItem.id, finishDate: Date.now()})
   }
 
   function removeFromList() {
-    remove({id: listItem.id})
+    return remove(listItem.id)
   }
 
   function addToList() {
-    create({bookId: book.id})
+    return create(book.id)
   }
 
   return (
