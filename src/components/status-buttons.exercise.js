@@ -83,7 +83,8 @@ function StatusButtons({user, book}) {
   // 🐨 call useMutation here and assign the mutate function to "remove"
   // the mutate function should call the list-items/:listItemId endpoint with a DELETE
   const [remove] = useMutation(
-    id => client(`list-items/${id}`, {method: 'DELETE', token: user.token}),
+    bookId =>
+      client(`list-items/${bookId}`, {method: 'DELETE', token: user.token}),
     {onSettled},
   )
 
