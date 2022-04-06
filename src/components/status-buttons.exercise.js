@@ -21,10 +21,14 @@ import {
 } from 'hooks/list-items'
 
 function TooltipButton({label, highlight, onClick, icon, ...rest}) {
-  const {isLoading, isError, error, run} = useAsync()
+  const {isLoading, isError, error, reset, run} = useAsync()
 
   function handleClick() {
-    run(onClick())
+    if (isError) {
+      reset()
+    } else {
+      run(onClick())
+    }
   }
 
   return (
@@ -53,9 +57,9 @@ function TooltipButton({label, highlight, onClick, icon, ...rest}) {
 
 function StatusButtons({user, book}) {
   const listItem = useListItem(user, book.id)
-  const [update] = useListItemUpdateMutation(user)
-  const [create] = useListItemCreateMutation(user)
-  const [remove] = useListItemRemoveMutation(user)
+  const [update] = useListItemUpdateMutation(user, {throwOnError: true})
+  const [create] = useListItemCreateMutation(user, {throwOnError: true})
+  const [remove] = useListItemRemoveMutation(user, {throwOnError: true})
 
   function markAsUnread() {
     return update({id: listItem.id, finishDate: null})
