@@ -16,6 +16,7 @@ import {StatusButtons} from 'components/status-buttons'
 import {useBook} from 'hooks/book'
 import {useListItem} from 'hooks/list-items'
 import {ErrorMessage} from 'components/lib'
+import {Spinner} from 'components/lib'
 
 function BookScreen({user}) {
   const {bookId} = useParams()
@@ -113,7 +114,7 @@ function NotesTextarea({listItem, user}) {
   // the use the `onSettled` config option to queryCache.invalidateQueries('list-items')
   // 💣 DELETE THIS ESLINT IGNORE!! Don't ignore the exhaustive deps rule please
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const [update, {error, isError}] = useListItemUpdateMutation(user)
+  const [update, {error, isError, isLoading}] = useListItemUpdateMutation(user)
 
   const debouncedMutate = React.useMemo(
     () => debounceFn(update, {wait: 300}),
@@ -137,7 +138,7 @@ function NotesTextarea({listItem, user}) {
             fontWeight: 'bold',
           }}
         >
-          Notes
+          Notes {isLoading ? <Spinner /> : null}
         </label>
 
         {isError ? (

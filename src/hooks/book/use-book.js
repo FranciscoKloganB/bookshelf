@@ -1,6 +1,5 @@
 import {useQuery} from 'react-query'
 import {client} from 'utils/api-client'
-
 import bookPlaceholderSvg from 'assets/book-placeholder.svg'
 
 export function useBook(bookId, user) {
