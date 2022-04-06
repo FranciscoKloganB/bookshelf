@@ -1,2 +1,2 @@
-export {useBookSearch} from './use-book-search'
+export * from './use-book-search'
 export {useBook} from './use-book'
