@@ -15,7 +15,26 @@
 
 ## 📝 Your Notes
 
-Elaborate on your learnings here in `INSTRUCTIONS.md`
+Throughout this very long exercise we learned how to use `react-query` lib
+to perform `reads` using the `useQuery` hook and `writes`, using the
+`useMutation` hook. Because we were repeating our code, we created our own
+custom hooks to remain DRY.
+
+We also provided custom configurations for our `react-query` globally, in
+particular regarding retry and retry count behaviours.
+
+Then, we needed to add error handling on rating and note sections. In these
+cases, we used the `{isError, error}` fields returned by `react-query` hooks
+themselves, to decide what to display on our screen. However, once we reached
+to another part of the application that needed error handling (`StatusButtons`)
+and `TooltipButton` components, we need to do something a bit different. For
+this case, instead of allowing `react-query` to handle unexpected errors and
+using the returned `{isError, error}` from `react-query` hooks, we configured
+the locally used custom hooks (which wrapped the `react-query` hooks), to accept
+an option to `throwOnError` boolean. By setting it to true, errors are not
+treated by `react-query` and instead the asynchronous rejections should be
+handled on the next layer. Which in our case was the `useAsync` hooks `run`
+function, which also setted its own `{isError, error}`
 
 ## Background
 
