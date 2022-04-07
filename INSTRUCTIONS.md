@@ -36,6 +36,17 @@ treated by `react-query` and instead the asynchronous rejections should be
 handled on the next layer. Which in our case was the `useAsync` hooks `run`
 function, which also setted its own `{isError, error}`
 
+At some point, we realized that even tho our discover and other `findAll` type
+of functionality already provided us with `book` details we were still querying
+our backend for book details whenever we clicked to see a book, from our
+reading list, finished boks or discover links. To speed time to interaction,
+we started setting the `queryKey` for a specific book using a new project
+function `setQueryDataForBook`, which takes a book and manually updates the cash
+making page loads faster. Notice that, we still make the specific book request,
+but since the data is already available in the cache for that specific, the page
+does not `Suspense`. However, if the returned book data differs from what is
+in the cache, the cache is invalidated and the page is re-rendered. :)
+
 ## Background
 
 Application state management is arguably one of the hardest problems in
