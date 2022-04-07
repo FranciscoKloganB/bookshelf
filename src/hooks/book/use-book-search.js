@@ -24,16 +24,25 @@ function bookSearchConfig(query, user) {
       client(`books?query=${encodeURIComponent(query)}`, {
         token: user.token,
       }).then(data => data.books),
+    config: {
+      onSuccess(books) {
+        books.forEach(book => {
+          queryCache.setQueryData(['book', {bookId: book.id}], book)
+        })
+      },
+    },
   }
 }
 
-export function useBookSearch(query, user) {
+function useBookSearch(query, user) {
   const queryResult = useQuery(bookSearchConfig(query, user))
 
   return {...queryResult, books: queryResult.data ?? loadingBooks}
 }
 
-export function refetchBookSearchQuery(user) {
+function refetchBookSearchQuery(user) {
   queryCache.removeQueries('bookSearch')
   queryCache.prefetchQuery(bookSearchConfig('', user))
 }
+
+export {useBookSearch, refetchBookSearchQuery}
