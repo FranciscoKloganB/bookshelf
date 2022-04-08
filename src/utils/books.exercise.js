@@ -1,6 +1,9 @@
 // 🐨 we're going to use React hooks in here now so we'll need React
+// eslint-disable-next-line no-unused-vars
+import * as React from 'react'
 import {useQuery, queryCache} from 'react-query'
 // 🐨 get AuthContext from context/auth-context
+import {useAuth} from 'context/auth-context.exercise'
 import {client} from './api-client'
 import bookPlaceholderSvg from 'assets/book-placeholder.svg'
 
@@ -36,15 +39,19 @@ const getBookSearchConfig = (query, user) => ({
 })
 
 // 💣 remove the user argument here
-function useBookSearch(query, user) {
+function useBookSearch(query) {
   // 🐨 get the user from React.useContext(AuthContext)
+  const {user} = useAuth()
+
   const result = useQuery(getBookSearchConfig(query, user))
   return {...result, books: result.data ?? loadingBooks}
 }
 
 // 💣 remove the user argument here
-function useBook(bookId, user) {
+function useBook(bookId) {
   // 🐨 get the user from React.useContext(AuthContext)
+  const {user} = useAuth()
+
   const {data} = useQuery({
     queryKey: ['book', {bookId}],
     queryFn: () =>
