@@ -73,6 +73,12 @@ async function refetchBookSearchQuery(user) {
   await queryCache.prefetchQuery(getBookSearchConfig('', user))
 }
 
+function useRefetchBookSearchQuery() {
+  const {user} = useAuth()
+
+  return React.useCallback(() => refetchBookSearchQuery(user), [user])
+}
+
 const bookQueryConfig = {
   staleTime: 1000 * 60 * 60,
   cacheTime: 1000 * 60 * 60,
@@ -82,4 +88,4 @@ function setQueryDataForBook(book) {
   queryCache.setQueryData(['book', {bookId: book.id}], book, bookQueryConfig)
 }
 
-export {useBook, useBookSearch, refetchBookSearchQuery, setQueryDataForBook}
+export {useBook, useBookSearch, refetchBookSearchQuery, useRefetchBookSearchQuery, setQueryDataForBook}
