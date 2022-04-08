@@ -2,8 +2,8 @@
 // 💰 using React.createContext
 import * as auth from 'auth-provider'
 import * as React from 'react'
-import {client} from './utils/api-client'
-import {useAsync} from './utils/hooks'
+import {client} from 'utils/api-client'
+import {useAsync} from 'utils/hooks'
 import {FullPageSpinner, FullPageErrorFallback} from 'components/lib'
 
 const AuthContext = React.createContext()

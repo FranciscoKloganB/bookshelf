@@ -17,12 +17,10 @@ function DiscoverBooksScreen() {
   // 💣 remove the user argument here
   const {books, error, status} = useBookSearch(query)
   // 🐨 use the new useRefetchBookSearchQuery to get the refetchBookSearchQuery function which handles accessing the user
-  const {refetchBookSearchQuery} = useRefetchBookSearchQuery()
+  const refetchBookSearchQuery = useRefetchBookSearchQuery()
 
   React.useEffect(() => {
-    // 💣 remove the user prop here
     return () => refetchBookSearchQuery()
-    // 💣 remove the user dependency here and add refetchBookSearchQuery instead
   }, [refetchBookSearchQuery])
 
   const isLoading = status === 'loading'
@@ -98,7 +96,6 @@ function DiscoverBooksScreen() {
               <li key={book.id} aria-label={book.title}>
                 <BookRow
                   // 💣 remove the user prop here
-                  user={user}
                   key={book.id}
                   book={book}
                 />
