@@ -47,6 +47,19 @@ but since the data is already available in the cache for that specific, the page
 does not `Suspense`. However, if the returned book data differs from what is
 in the cache, the cache is invalidated and the page is re-rendered. :)
 
+Finally, if we want to optimistically update our UI, to provide a "smoother"
+and faster experience... all we have to do is interact with
+`react-query.queryCache` explicitly by using the `onMutate` configuration. This
+function receives the same data that the hook receives and can be used to
+manually set the data on the query cache using `setQueryData`. Note that,
+when an error occurs, we are getting free recoveries because we happen to use
+`invalidateQueries` after every mutation by default. However, if this config is
+overwritten and this behaviour no longer applies, than we can end up with our
+app unsynchronized with the backend. To fix this, we clean up after ourselves
+by using the `onError` configuration. The `onError` configuration's 3rd argument
+is whatever is returned on our `onMutate` configuration and is the value or
+callable we should use to recover the state!
+
 ## Background
 
 Application state management is arguably one of the hardest problems in
