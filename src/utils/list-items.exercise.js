@@ -2,19 +2,17 @@
 // eslint-disable-next-line no-unused-vars
 import * as React from 'react'
 import {useQuery, useMutation, queryCache} from 'react-query'
-// 🐨 get AuthContext from context/auth-context
-import {useAuth} from 'context/auth-context.exercise'
 import {setQueryDataForBook} from './books'
-import {client} from './api-client'
+import {useClient} from './api-client'
 
 // 💣 remove the user argument here
 function useListItems() {
   // 🐨 get the user from React.useContext(AuthContext)
-  const {user} = useAuth()
+  const client = useClient()
   const {data} = useQuery({
     queryKey: 'list-items',
     queryFn: () =>
-      client(`list-items`, {token: user.token}).then(data => data.listItems),
+      client(`list-items`).then(data => data.listItems),
     onSuccess: async listItems => {
       for (const listItem of listItems) {
         setQueryDataForBook(listItem.book)
@@ -40,14 +38,13 @@ const defaultMutationOptions = {
 // 💣 remove the user argument here
 function useUpdateListItem(options) {
   // 🐨 get the user from React.useContext(AuthContext)
-  const {user} = useAuth()
+  const client = useClient()
 
   return useMutation(
     updates =>
       client(`list-items/${updates.id}`, {
         method: 'PUT',
         data: updates,
-        token: user.token,
       }),
     {
       onMutate(newItem) {
@@ -70,10 +67,10 @@ function useUpdateListItem(options) {
 // 💣 remove the user argument here
 function useRemoveListItem(options) {
   // 🐨 get the user from React.useContext(AuthContext)
-  const {user} = useAuth()
+  const client = useClient()
 
   return useMutation(
-    ({id}) => client(`list-items/${id}`, {method: 'DELETE', token: user.token}),
+    ({id}) => client(`list-items/${id}`, {method: 'DELETE'}),
     {
       onMutate(removedItem) {
         const previousItems = queryCache.getQueryData('list-items')
@@ -93,10 +90,10 @@ function useRemoveListItem(options) {
 // 💣 remove the user argument here
 function useCreateListItem(options) {
   // 🐨 get the user from React.useContext(AuthContext)
-  const {user} = useAuth()
+  const client = useClient()
 
   return useMutation(
-    ({bookId}) => client(`list-items`, {data: {bookId}, token: user.token}),
+    ({bookId}) => client(`list-items`, {data: {bookId}}),
     {...defaultMutationOptions, ...options},
   )
 }
