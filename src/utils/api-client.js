@@ -1,5 +1,7 @@
+import React from 'react'
 import {queryCache} from 'react-query'
 import * as auth from 'auth-provider'
+import { useAuth } from 'context/auth-context.exercise'
 const apiURL = process.env.REACT_APP_API_URL
 
 async function client(
@@ -34,4 +36,13 @@ async function client(
   })
 }
 
-export {client}
+function useClient() {
+  const {user: {token}} = useAuth()
+
+  return React.useCallback(
+    (endpoint, config) => client(endpoint, {token, ...config}),
+    [token],
+  )
+}
+
+export {client, useClient}
