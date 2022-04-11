@@ -2,7 +2,12 @@
 
 ## 📝 Your Notes
 
-Elaborate on your learnings here in `INSTRUCTIONS.md`
+For this lesson we revisited the concept of `React.createContext` hooks. We
+created a global app providers component that manages all app providers (both
+internal and external) and we included a `AuthProvider` in it, which was built
+by us. Because we created a this authentication context, we reduced boilerplate
+in our project both in components (by avoiding prop drills) as well as our
+custom hooks.
 
 ## Background
 
