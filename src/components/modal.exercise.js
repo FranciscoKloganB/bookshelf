@@ -1,6 +1,8 @@
 // 🐨 you're going to need the Dialog component
 // It's just a light wrapper around ReachUI Dialog
 // 📜 https://reacttraining.com/reach-ui/dialog/
+/** @jsx jsx */
+import {jsx} from '@emotion/core'
 import {CircleButton} from 'components/lib'
 import {Dialog} from './lib'
 import VisuallyHidden from '@reach/visually-hidden'
