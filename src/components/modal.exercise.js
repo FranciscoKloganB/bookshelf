@@ -62,12 +62,11 @@ function ModalOpenButton({children: child}) {
 // 🐨 create a ModalContents component which renders the Dialog.
 // Set the isOpen prop and the onDismiss prop should set isOpen to close
 // 💰 be sure to forward along the rest of the props (especially children).
-function ModalContents({modalLabelText, ...props}) {
+function ModalContents(props) {
   const [isOpen, setIsOpen] = React.useContext(ModalContext)
 
   return (
     <Dialog
-      aria-label={modalLabelText}
       isOpen={isOpen}
       onDismiss={() => setIsOpen(false)}
       {...props}
@@ -76,4 +75,4 @@ function ModalContents({modalLabelText, ...props}) {
 }
 
 // 🐨 don't forget to export all the components here
-export {Modal, ModalContext}
+export {Modal, ModalDismissButton, ModalOpenButton, ModalContents}
