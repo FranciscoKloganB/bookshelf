@@ -20,6 +20,11 @@ import React from 'react'
 </Modal>
 */
 
+const callAll =
+  (...fns) =>
+  (...args) =>
+    fns.forEach(fn => fn && fn(...args))
+
 // we need this set of compound components to be structurally flexible
 // meaning we don't have control over the structure of the components. But
 // we still want to have implicitly shared state, so...
@@ -45,17 +50,19 @@ function Modal(props) {
 // 💰 keep in mind that the children prop will be a single child (the user's button)
 function ModalDismissButton({children: child}) {
   const [, setIsOpen] = React.useContext(ModalContext)
+
   return React.cloneElement(child, {
-    onClick: () => setIsOpen(false),
+    onClick: callAll(() => setIsOpen(false), child.props.onClick),
   })
 }
 
 // 🐨 create a ModalOpenButton component which is effectively the same thing as
 // ModalDismissButton except the onClick sets isOpen to true
-function ModalOpenButton({children: child}) {
+function ModalOpenButton({afterOnClick, children: child}) {
   const [, setIsOpen] = React.useContext(ModalContext)
+
   return React.cloneElement(child, {
-    onClick: () => setIsOpen(true),
+    onClick: callAll(() => setIsOpen(true), child.props.onClick),
   })
 }
 

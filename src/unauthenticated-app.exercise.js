@@ -129,7 +129,11 @@ function UnauthenticatedApp() {
         </Modal>
         <Modal>
           <ModalOpenButton>
-            <Button variant="primary" aria-label="Register button">
+            <Button
+              onClick={() => console.log('hello world onClick modal open')}
+              variant="primary"
+              aria-label="Register button"
+            >
               Register
             </Button>
           </ModalOpenButton>
