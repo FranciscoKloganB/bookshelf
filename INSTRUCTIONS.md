@@ -2,7 +2,22 @@
 
 ## 📝 Your Notes
 
-Elaborate on your learnings here in `INSTRUCTIONS.md`
+First and foremost, we should make an effort to only optimize our application
+when there are clear signs of performance degradation or that such degradation
+is likely to be witnessed as consumed data, app bundle or code complexity grows.
+
+For the first part of this lesson, we applied `Code Splitting` by using
+`React.lazy` function, which allows us to asynchronously load components,
+decreasing the time to `First Meaningful Paint`. We did this, by applying
+the technique to one of our top-most components, `App`, which now lazy loads
+`UnauthenticatedApp` and `AuthenticatedApp`. The impact that we saw was small
+in performance because the app it self is not very big, but this could bring
+major benefits as we implement more features and add more dependencies to our
+application. Also, while time to `First Meaningful Paint` is important and
+improves the likelyhood a user will not leave your page due to "slow loads", it
+is important to say that this metric has been abandoned as the defacto
+page load metric by Google Lighthouse, in favor of time to
+`Largest Meaningful Paint`.
 
 ## Background
 
