@@ -8,7 +8,6 @@ const AuthenticatedApp = React.lazy(() => import('./authenticated-app'))
 const UnauthenticatedApp = React.lazy(() => import('./unauthenticated-app'))
 
 function App() {
-  // eslint-disable-next-line no-unused-vars
   const {user} = useAuth()
 
   // 🐨 wrap this in a <React.Suspense /> component
