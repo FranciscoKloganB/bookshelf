@@ -40,12 +40,18 @@ function AuthProvider(props) {
     run(userPromise)
   }, [run])
 
-  const login = form => auth.login(form).then(user => setData(user))
-  const register = form => auth.register(form).then(user => setData(user))
-  const logout = () => {
+  const register = React.useCallback(
+    form => auth.register(form).then(user => setData(user)),
+    [setData]
+  )
+  const login = React.useCallback(
+    form => auth.login(form).then(user => setData(user)),
+    [setData]
+  )
+  const logout = React.useCallback(() => {
     auth.logout()
     setData(null)
-  }
+  }, [setData])
 
   if (isLoading || isIdle) {
     return <FullPageSpinner />
@@ -56,7 +62,16 @@ function AuthProvider(props) {
   }
 
   if (isSuccess) {
+    // Since this application never changes the value of user, it is not worth
+    // it to add React.useMemo complexity to this value constant. We add
+    // useCallback to the functions, because this allows consumers of this
+    // provider to specify the functions in the dependency arrays.
+    // If we wanted to memoize user, we could move `value` constant out of
+    // the conditional statement, and memoize the entire object, specifying
+    // each value as a dependency of Memo. Finally, passing the memoized value
+    // to the provider value prop.
     const value = {user, login, register, logout}
+
     return <AuthContext.Provider value={value} {...props} />
   }
 

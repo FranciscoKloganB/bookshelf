@@ -32,6 +32,16 @@ meaningful data (books and possibly others) much faster, since the
 `AuthenticatedApp` component will be cached in the browser by the time
 `React.lazy` attempts to fetch it! :)
 
+In the second extra credit, we added `React.useCallback` to registration, login
+and logout functions of `AuthProvider` in order to allow consumers to register
+these as dependencies in their own hooks. However, we did not apply the
+suggested memoization of `user` value, because the app never changes the user
+outside the provider itself and when this does happen we want a re-render to
+happen anyway! If we were to allow changing between users, than applying
+`React.memo` to `{user, register, logout, login}`, could or could not be worth
+it, but... given the current application flow, this optimization would provide
+no benefit and would only increase complexity of `AuthProvider`!
+
 ## Background
 
 One of the most common performance problems web applications face is initial
