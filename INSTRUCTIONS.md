@@ -2,7 +2,15 @@
 
 ## 📝 Your Notes
 
-Elaborate on your learnings here in `INSTRUCTIONS.md`
+For this exercise, we revisited the concept of compound components using react
+context. Compound components have the downside of forcing component users to
+write a bit more code than when they re-use a component that does not follow
+this pattern. However, the advantage of compound components is that code is
+easier to re-use, extended and even modify while still being able to provide
+good defaults. Another advantage is that the usage of the re-usable component
+that follows the compound component pattern, is tied with the declarative nature
+of these components, where behavior is explicit and not hidden behind props,
+whose naming is not always the best or revealing.
 
 ## Background
 
