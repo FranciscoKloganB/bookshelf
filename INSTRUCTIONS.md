@@ -19,6 +19,19 @@ is important to say that this metric has been abandoned as the defacto
 page load metric by Google Lighthouse, in favor of time to
 `Largest Meaningful Paint`.
 
+During the first extra credit and, knowing that our users are likely to go to
+`AuthenticatedApp` component in a relatively short time. We opt to prefetch
+that component (lazily and asynchronously) using `Webpack Magic Comments`
+(_thisfunctionality also exists in other bundlers_). By employing this technique
+we lazily load the `UnauthenticatedApp` component if and only if the user
+requires it and we always lazily load the `AuthenticatedApp` component in the
+background, even if the user is first going to the `UnauthenticatedApp` part.
+Like this, we still retain the benefits of coad spliting and get faster page
+loads, but once the user register or logs in we are also able to fetch
+meaningful data (books and possibly others) much faster, since the
+`AuthenticatedApp` component will be cached in the browser by the time
+`React.lazy` attempts to fetch it! :)
+
 ## Background
 
 One of the most common performance problems web applications face is initial
