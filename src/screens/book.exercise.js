@@ -14,6 +14,7 @@ import * as colors from 'styles/colors'
 import {Spinner, Textarea, ErrorMessage} from 'components/lib'
 import {Rating} from 'components/rating'
 import {StatusButtons} from 'components/status-buttons'
+import {Profiler} from 'components/profiler'
 
 function BookScreen() {
   const {bookId} = useParams()
@@ -141,4 +142,12 @@ function NotesTextarea({listItem}) {
   )
 }
 
-export {BookScreen}
+function ProfiledBookScreen() {
+  return (
+    <Profiler profilerId={'BookScreen'}>
+      <BookScreen />
+    </Profiler>
+  )
+}
+
+export {ProfiledBookScreen as BookScreen}

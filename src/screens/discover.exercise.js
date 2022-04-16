@@ -8,6 +8,7 @@ import * as colors from 'styles/colors'
 import {useBookSearch, useRefetchBookSearchQuery} from 'utils/books'
 import {BookRow} from 'components/book-row'
 import {BookListUL, Spinner, Input} from 'components/lib'
+import {Profiler} from 'components/profiler'
 
 function DiscoverBooksScreen() {
   const [query, setQuery] = React.useState('')
@@ -110,4 +111,12 @@ function DiscoverBooksScreen() {
   )
 }
 
-export {DiscoverBooksScreen}
+function ProfiledDiscoverBooksScreen() {
+  return (
+    <Profiler profilerId={'DiscoverBooksScreen'}>
+      <DiscoverBooksScreen />
+    </Profiler>
+  )
+}
+
+export {ProfiledDiscoverBooksScreen as DiscoverBooksScreen}
