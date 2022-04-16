@@ -2,7 +2,9 @@
 
 ## 📝 Your Notes
 
-Elaborate on your learnings here in `INSTRUCTIONS.md`
+During this exercise, we revisited the concept of `Fetching data as we Render`
+without using the React Concurrent API - by simply performing some requests
+at the top level of component files (outside of component definitions).
 
 ## Background
 
