@@ -43,10 +43,8 @@ describe('api-client', () => {
     expect(result).toEqual(mockResult)
   })
 
-  describe('request configuration', () => {
-
-
-    test('adds auth token when a token is provided', async () => {
+  describe('when configuration is provided', () => {
+    test('adds auth token when a token is given', async () => {
       // 🐨 create a "request" variable with let
       let request
       // 🐨 create a server handler for the request you'll be testing
@@ -66,7 +64,7 @@ describe('api-client', () => {
       expect(request.headers.get('Authorization')).toEqual(`Bearer ${token}`)
     })
 
-    test('allows for config overrides', async () => {
+    test('overrides custom configuration', async () => {
       // 🐨 create a "request" variable with let
       let request
       // 🐨 create a server handler for the request you'll be testing
@@ -100,15 +98,24 @@ describe('api-client', () => {
       expect(request.body).toEqual('"world"')
     })
   })
+
+  describe('when data is provided', () => {
+    const data = {hello: 'world'}
+
+    beforeEach(() => {
+      // 🐨 create a server handler very similar to the previous ones
+      server.use(
+        rest.post(`${apiURL}/${endpoint}`, async (req, res, ctx) => {
+          return res(ctx.json(req.body))
+        }),
+      )
+    })
+
+    test('stringifies data and defaults to post method', async () => {
+      // 🐨 call client with an endpoint and an object with the data
+      const result = await client(endpoint, {data})
+      // 🐨 verify the request.body is equal to the mock data object you passed
+      expect(result).toEqual(data)
+    })
+  })
 })
-
-
-test.todo(
-  'when data is provided, it is stringified and the method defaults to POST',
-)
-// 🐨 create a mock data object
-// 🐨 create a server handler very similar to the previous ones to handle the post request
-//    💰 Use rest.post instead of rest.get like we've been doing so far
-// 🐨 call client with an endpoint and an object with the data
-//    💰 client(endpoint, {data})
-// 🐨 verify the request.body is equal to the mock data object you passed
