@@ -4,7 +4,7 @@ import {client} from 'utils/api-client'
 
 let reportQueue = []
 
-setInterval(() => {
+function sendAggregatedReports() {
   if (!reportQueue.length) {
     return Promise.resolve({success: true})
   }
@@ -18,7 +18,9 @@ setInterval(() => {
       e,
     ),
   )
-}, 5000)
+}
+
+setInterval(sendAggregatedReports, 5000)
 
 function Profiler({children, phases, profilerId}) {
   /**
