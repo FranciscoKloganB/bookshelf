@@ -2,7 +2,20 @@
 
 ## 📝 Your Notes
 
-Elaborate on your learnings here in `INSTRUCTIONS.md`
+For the unit testing module we configured `MWS` a mock server, which intercepts
+calls to `window.fetch` allowing us to test request/response flows. As part of
+the configuration, we eventually, learned how to globally apply the server,
+so that we do not have to repeat the boilerplate in every `.spec` file.
+
+Most of our tests were pretty simple and straightforward. We learned a handy
+way of resolving promises that `reject` by using `req.catch(e => e)` and it's
+more robust version, provided by Jest, which is `await expect(x).rejects.toEqual`.
+The latter approach is preferred, but the former one is particularly useful in
+use cases like the one we used it in.
+
+We also mocked, without overriding, two modules in our spec. This was required
+because our implementation depended on them and they were not in our control.
+Even if they were, mocking would be good practise, since we are doing unit tests.
 
 ## Background
 
