@@ -23,7 +23,13 @@ function ListItemList({filterListItems, noListItems, noFilteredListItems}) {
   }
 
   return (
-    <Profiler profilerId={'BookListUL'}>
+    <Profiler
+      profilerId={'BookListUL'}
+      metadata={{
+        listItemCount: listItems.count,
+        filteredListItemCount: filteredListItems.count,
+      }}
+    >
       <BookListUL>
         {filteredListItems.map(listItem => (
           <li key={listItem.id} aria-label={listItem.book.title}>

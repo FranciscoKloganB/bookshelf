@@ -22,7 +22,7 @@ function sendAggregatedReports() {
 
 setInterval(sendAggregatedReports, 5000)
 
-function Profiler({children, phases, profilerId}) {
+function Profiler({children, metadata, phases, profilerId}) {
   /**
    * Aggregates performance reports for all React lifecycle phases, when phases
    * prop is not provided. Otherwise aggregates only on specified phases.
@@ -47,6 +47,7 @@ function Profiler({children, phases, profilerId}) {
         startTime,
         commitTime,
         interactions,
+        metadata
       })
     }
   }
