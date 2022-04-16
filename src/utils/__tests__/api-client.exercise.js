@@ -3,6 +3,11 @@
 // 💰 the way that our tests are set up, ind this in `src/test/server/test-server.js`
 import {server, rest} from 'test/server'
 import {client} from 'utils/api-client'
+import {queryCache} from 'react-query'
+import * as auth from 'auth-provider'
+
+jest.mock('react-query')
+jest.mock('auth-provider')
 
 const apiURL = process.env.REACT_APP_API_URL
 const endpoint = 'test-endpoint'
@@ -120,9 +125,9 @@ describe('api-client', () => {
   })
 
   describe('when the response is an error', () => {
-    const errorResponse = {message: 'this is the response!'}
-
     test('returns the error data fetched from the endpoint', async () => {
+      const errorResponse = {message: 'this is the response!'}
+
       server.use(
         rest.get(`${apiURL}/${endpoint}`, async (_req, res, ctx) => {
           return res(ctx.status(400), ctx.json(errorResponse))
@@ -130,6 +135,25 @@ describe('api-client', () => {
       )
 
       await expect(client(endpoint)).rejects.toEqual(errorResponse)
+    })
+
+    describe('when the error code is 401 unauthorized', () => {
+      test('invalidates the user session', async () => {
+        const errorResponse = {message: 'Please re-authenticate.'}
+
+        server.use(
+          rest.get(`${apiURL}/${endpoint}`, async (_req, res, ctx) => {
+            return res(ctx.status(401), ctx.json(errorResponse))
+          }),
+        )
+
+        const result = await client(endpoint).catch(e => e)
+        expect(queryCache.clear).toHaveBeenCalledTimes(1)
+        expect(auth.logout).toHaveBeenCalledTimes(1)
+        expect(result.message).toMatchInlineSnapshot(
+          `"Please re-authenticate."`,
+        )
+      })
     })
   })
 })
