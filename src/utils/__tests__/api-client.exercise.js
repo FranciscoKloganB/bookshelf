@@ -118,4 +118,18 @@ describe('api-client', () => {
       expect(result).toEqual(data)
     })
   })
+
+  describe('when the response is an error', () => {
+    const errorResponse = {message: 'this is the response!'}
+
+    test('returns the error data fetched from the endpoint', async () => {
+      server.use(
+        rest.get(`${apiURL}/${endpoint}`, async (_req, res, ctx) => {
+          return res(ctx.status(400), ctx.json(errorResponse))
+        }),
+      )
+
+      await expect(client(endpoint)).rejects.toEqual(errorResponse)
+    })
+  })
 })
