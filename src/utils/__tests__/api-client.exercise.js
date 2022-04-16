@@ -5,6 +5,7 @@ import {server, rest} from 'test/server'
 import {client} from 'utils/api-client'
 
 const apiURL = process.env.REACT_APP_API_URL
+const endpoint = 'test-endpoint'
 
 describe('api-client', () => {
   // 🐨 add a beforeAll to start the server with `server.listen()`
@@ -25,7 +26,6 @@ describe('api-client', () => {
 
   // 🐨 flesh these out:
   test('fetches at endpoint with the arguments for GET requests', async () => {
-    const endpoint = 'test-endpoint'
     const mockResult = {mockValue: 'VALUE'}
     // 🐨 add a server handler to handle a test request you'll be making
     // 💰 because this is the first one, I'll give you the code for how to do that.
@@ -42,25 +42,27 @@ describe('api-client', () => {
     // 🐨 assert that the resolved value from the client call is correct
     expect(result).toEqual(mockResult)
   })
+
+  test('adds auth token when a token is provided', async () => {
+    // 🐨 create a fake token (it can be set to any string you want)
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+    // 🐨 create a "request" variable with let
+    let request
+    // 🐨 create a server handler for the request you'll be testing
+    // 🐨 inside the server handler, assign "request" to "req" use that to assert things later
+    server.use(
+      rest.get(`${apiURL}/${endpoint}`, async (req, res, ctx) => {
+        request = req
+        return res(ctx.json({}))
+      }),
+    )
+
+    // 🐨 call the client with the token (note that it's async)
+    await client(endpoint, {token})
+    // 🐨 verify that `request.headers.get('Authorization')` is correct
+    expect(request.headers.get('Authorization')).toEqual(`Bearer ${token}`)
+  })
 })
-
-
-
-
-
-test.todo('adds auth token when a token is provided')
-// 🐨 create a fake token (it can be set to any string you want)
-// 🐨 create a "request" variable with let
-// 🐨 create a server handler to handle a test request you'll be making
-// 🐨 inside the server handler, assign "request" to "req" so we can use that
-//     to assert things later.
-//     💰 so, something like...
-//       async (req, res, ctx) => {
-//         request = req
-//         ... etc...
-//
-// 🐨 call the client with the token (note that it's async)
-// 🐨 verify that `request.headers.get('Authorization')` is correct (it should include the token)
 
 test.todo('allows for config overrides')
 // 🐨 do a very similar setup to the previous test
