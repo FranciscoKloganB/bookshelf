@@ -43,32 +43,65 @@ describe('api-client', () => {
     expect(result).toEqual(mockResult)
   })
 
-  test('adds auth token when a token is provided', async () => {
-    // 🐨 create a fake token (it can be set to any string you want)
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
-    // 🐨 create a "request" variable with let
-    let request
-    // 🐨 create a server handler for the request you'll be testing
-    // 🐨 inside the server handler, assign "request" to "req" use that to assert things later
-    server.use(
-      rest.get(`${apiURL}/${endpoint}`, async (req, res, ctx) => {
-        request = req
-        return res(ctx.json({}))
-      }),
-    )
+  describe('request configuration', () => {
 
-    // 🐨 call the client with the token (note that it's async)
-    await client(endpoint, {token})
-    // 🐨 verify that `request.headers.get('Authorization')` is correct
-    expect(request.headers.get('Authorization')).toEqual(`Bearer ${token}`)
+
+    test('adds auth token when a token is provided', async () => {
+      // 🐨 create a "request" variable with let
+      let request
+      // 🐨 create a server handler for the request you'll be testing
+      // 🐨 inside the server handler, assign "request" to "req" use that to assert things later
+      server.use(
+        rest.get(`${apiURL}/${endpoint}`, async (req, res, ctx) => {
+          request = req
+          return res(ctx.json({}))
+        }),
+      )
+
+      // 🐨 create a fake token (it can be set to any string you want)
+      const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+      // 🐨 call the client with the token (note that it's async)
+      await client(endpoint, {token})
+      // 🐨 verify that `request.headers.get('Authorization')` is correct
+      expect(request.headers.get('Authorization')).toEqual(`Bearer ${token}`)
+    })
+
+    test('allows for config overrides', async () => {
+      // 🐨 create a "request" variable with let
+      let request
+      // 🐨 create a server handler for the request you'll be testing
+      // 🐨 inside the server handler, assign "request" to "req" use that to assert things later
+      server.use(
+        rest.put(`${apiURL}/${endpoint}`, async (req, res, ctx) => {
+          request = req
+          return res(ctx.json({}))
+        }),
+      )
+
+      // 🐨 create a custom config that specifies "mode" of "cors" and a custom header
+      const data = 'world'
+      const mode = 'cors'
+      const contentType = 'application/xml'
+      const customConfig = {
+        data,
+        method: 'PUT',
+        headers: {
+          mode,
+          'Content-Type': contentType,
+        },
+      }
+
+      // 🐨 call the client with the endpoint and the custom config
+      await client(endpoint, customConfig)
+
+      // 🐨 verify the request had the correct properties
+      expect(request.headers.get('mode')).toEqual(mode)
+      expect(request.headers.get('content-type')).toEqual(contentType)
+      expect(request.body).toEqual('"world"')
+    })
   })
 })
 
-test.todo('allows for config overrides')
-// 🐨 do a very similar setup to the previous test
-// 🐨 create a custom config that specifies properties like "mode" of "cors" and a custom header
-// 🐨 call the client with the endpoint and the custom config
-// 🐨 verify the request had the correct properties
 
 test.todo(
   'when data is provided, it is stringified and the method defaults to POST',
