@@ -42,6 +42,19 @@ happen anyway! If we were to allow changing between users, than applying
 it, but... given the current application flow, this optimization would provide
 no benefit and would only increase complexity of `AuthProvider`!
 
+On the third extra credit, we added `production` build performance monitoring
+by enabling `React.Profiler` (building the distribution with `--profile` flag).
+To reduce boilerplate, we created a custom `Profiler` component, responsible
+for aggregating logs and reporting them to the backend every 5 seconds. Apart
+from reporting the `React.Profiler` default props, we also log any metadata
+we desire using our `metadata` prop, which we append to the report. Finally,
+we learned about the `Tracing API` but we did not implement any of it, because
+it has been removed in `React v17`. This API intent, back when it was in
+experimental phase (before being eliminated), was to be able to correlate
+reports across re-renders, for example, knowing what user actions triggered
+a given re-render and what re-renders down the line happend due to a previous
+trigger.
+
 ## Background
 
 One of the most common performance problems web applications face is initial
