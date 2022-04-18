@@ -2,7 +2,24 @@
 
 ## 📝 Your Notes
 
-Elaborate on your learnings here in `INSTRUCTIONS.md`
+In this exercise we used `React Testing Library` to make assertions over what
+our reusable `Modal` _et al._ components render to the screen and we learned
+that while component tests provide good confidence, most of our app should be
+tested via integration tests. Consequently, component tests should mostly
+be applied to components that are meant to be reused across the project.
+
+In a similar fashion, we tested our `useAsync` custom hook using
+`React Hooks Testing Library`. We added a `deferred` utility function to create
+promises, which we can reject and resolve on demand as well as a factory to
+make it easy for us to assert on the `useAsync` state as it promises progress
+on command. The `renderHook` provided by the testing library, allows us
+to access whatever is returned by the hook using `result`, which is the feature
+we used the most, but others are also available. Still on this topic, we
+revisited the `act` function, which we had to use whenever our test instructions
+caused a change in the `useAsync` hook internal state. This informs react that
+the change was intentional! Some of our `act` calls had to be asynchronous,
+because they wrapped changes made to `useAsync` internal state, which were the
+cause of mock promise resolutions and rejections.
 
 ## Background
 
