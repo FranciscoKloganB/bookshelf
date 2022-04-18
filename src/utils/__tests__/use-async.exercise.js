@@ -10,6 +10,8 @@ describe('useAsync Hook', () => {
   let reject
 
   beforeEach(() => {
+    jest.spyOn(console, 'error')
+
     const deferredObject = deferred()
     promise = deferredObject.promise
     resolve = deferredObject.resolve
@@ -17,6 +19,10 @@ describe('useAsync Hook', () => {
     promiseResult = undefined
   })
 
+  afterEach(() => {
+    console.error.mockRestore()
+  })
+  
   test('initial state', async () => {
     const {result} = renderHook(() => useAsync())
 
@@ -227,7 +233,6 @@ describe('useAsync Hook', () => {
   })
 
   test('No state updates happen if the component is unmounted while pending', async () => {
-    const consoleErrorSpy = jest.spyOn(console, 'error')
     const {result, unmount} = renderHook(() => useAsync())
 
     act(() => {
@@ -241,7 +246,7 @@ describe('useAsync Hook', () => {
       await promiseResult
     })
 
-    expect(consoleErrorSpy).not.toHaveBeenCalled()
+    expect(console.error).not.toHaveBeenCalled()
   })
 
   test('calling "run" without a promise results in an early error', async () => {
