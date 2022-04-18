@@ -41,7 +41,9 @@ describe('useAsync Hook', () => {
     test('transitions to pending', async () => {
       const {result} = renderHook(() => useAsync())
 
-      act(() => result.current.run(promise))
+      act(() => {
+        result.current.run(promise)
+      })
 
       expect(result.current).toEqual({
         status: 'pending',
@@ -152,18 +154,103 @@ describe('useAsync Hook', () => {
     })
   })
 
-  test('can specify an initial state', async () => {})
-  // 💰 useAsync(customInitialState)
+  test('can specify an initial state', async () => {
+    const {result} = renderHook(() =>
+      useAsync({status: 'pending', data: null, error: null, hello: 'world'}),
+    )
 
-  test('can set the data', async () => {})
-  // 💰 result.current.setData('whatever you want')
+    expect(result.current).toEqual({
+      status: 'pending',
+      data: null,
+      error: null,
 
-  test('can set the error', async () => {})
-  // 💰 result.current.setError('whatever you want')
+      isIdle: false,
+      isLoading: true,
+      isError: false,
+      isSuccess: false,
 
-  test('No state updates happen if the component is unmounted while pending', async () => {})
-  // 💰 const {result, unmount} = renderHook(...)
-  // 🐨 ensure that console.error is not called (React will call console.error if updates happen when unmounted)
+      run: expect.any(Function),
+      reset: expect.any(Function),
+      setData: expect.any(Function),
+      setError: expect.any(Function),
+    })
+  })
 
-  test('calling "run" without a promise results in an early error', async () => {})
+  test('can set the data', async () => {
+    const {result} = renderHook(() => useAsync())
+    const mockData = Symbol('hello-world')
+
+    act(() => {
+      result.current.setData(mockData)
+    })
+
+    expect(result.current).toEqual({
+      status: 'resolved',
+      data: mockData,
+      error: null,
+
+      isIdle: false,
+      isLoading: false,
+      isError: false,
+      isSuccess: true,
+
+      run: expect.any(Function),
+      reset: expect.any(Function),
+      setData: expect.any(Function),
+      setError: expect.any(Function),
+    })
+  })
+
+  test('can set the error', async () => {
+    const {result} = renderHook(() => useAsync())
+    const mockData = Symbol('hello-world')
+
+    act(() => {
+      result.current.setError(mockData)
+    })
+
+    expect(result.current).toEqual({
+      status: 'rejected',
+      data: null,
+      error: mockData,
+
+      isIdle: false,
+      isLoading: false,
+      isError: true,
+      isSuccess: false,
+
+      run: expect.any(Function),
+      reset: expect.any(Function),
+      setData: expect.any(Function),
+      setError: expect.any(Function),
+    })
+  })
+
+  test('No state updates happen if the component is unmounted while pending', async () => {
+    const consoleErrorSpy = jest.spyOn(console, 'error')
+    const {result, unmount} = renderHook(() => useAsync())
+
+    act(() => {
+      promiseResult = result.current.run(promise)
+    })
+
+    unmount()
+
+    await act(async () => {
+      resolve()
+      await promiseResult
+    })
+
+    expect(consoleErrorSpy).not.toHaveBeenCalled()
+  })
+
+  test('calling "run" without a promise results in an early error', async () => {
+    const {result} = renderHook(() => useAsync())
+
+    expect(() =>
+      result.current.run(() => {}),
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"The argument passed to useAsync().run must be a promise. Maybe a function that's passed isn't returning anything?"`,
+    )
+  })
 })
