@@ -73,28 +73,51 @@ describe('useAsync Hook', () => {
         await promiseResult
       })
 
-    expect(result.current).toEqual({
-      status: 'resolved',
-      data: mockResult,
-      error: null,
+      expect(result.current).toEqual({
+        status: 'resolved',
+        data: mockResult,
+        error: null,
 
-      isIdle: false,
-      isLoading: false,
-      isError: false,
-      isSuccess: true,
+        isIdle: false,
+        isLoading: false,
+        isError: false,
+        isSuccess: true,
 
-      run: expect.any(Function),
-      reset: expect.any(Function),
-      setData: expect.any(Function),
-      setError: expect.any(Function),
-    })
+        run: expect.any(Function),
+        reset: expect.any(Function),
+        setData: expect.any(Function),
+        setError: expect.any(Function),
+      })
     })
 
     test('when the promise rejects', async () => {
-      // 🐨 this will be very similar to the previous test, except you'll reject the
-      // promise instead and assert on the error state.
-      // 💰 to avoid the promise actually failing your test, you can catch
-      //    the promise returned from `run` with `.catch(() => {})`
+      const {result} = renderHook(() => useAsync())
+
+      act(() => {
+        promiseResult = result.current.run(promise)
+      })
+
+      const rejectedValue = Symbol({message: 'rejected'})
+      await act(async () => {
+        reject(rejectedValue)
+        await promiseResult.catch(() => {})
+      })
+
+      expect(result.current).toEqual({
+        status: 'rejected',
+        data: null,
+        error: rejectedValue,
+
+        isIdle: false,
+        isLoading: false,
+        isError: true,
+        isSuccess: false,
+
+        run: expect.any(Function),
+        reset: expect.any(Function),
+        setData: expect.any(Function),
+        setError: expect.any(Function),
+      })
     })
   })
 
