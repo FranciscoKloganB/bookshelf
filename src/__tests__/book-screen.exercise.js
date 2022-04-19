@@ -8,48 +8,53 @@ import {AppProviders} from 'context'
 import {App} from 'app'
 
 describe('Book Screen', () => {
+  async function mockFetch(url, config) {
+    return Promise.resolve({
+      ok: true,
+      json: async () => {
+        if (url.endsWith('/bootstrap')) {
+          return {
+            user: {
+              ...user,
+              token,
+            },
+            listItems: [],
+          }
+        }
+
+        if (url.endsWith('/list-items')) {
+          return {listItems: []}
+        }
+
+        if (url.endsWith(`/books/${book.id}`)) {
+          return {book}
+        }
+
+        return Promise.reject(
+          new Error(`MUST HANDLE '${url}' with given config: ${config}`),
+        )
+      },
+    })
+  }
+
   // 🐨 create a user using `buildUser`
   // 🐨 create a book use `buildBook`
   const user = buildUser()
   const book = buildBook()
+  const originalFetch = window.fetch
   const route = `/book/${book.id}`
   const token = 'token'
 
   beforeAll(() => {
+    jest.spyOn(window, 'fetch')
+
     // 🐨 reassign window.fetch to another function and handle the following requests:
     // - url ends with `/bootstrap`: respond with {user, listItems: []}
     // - url ends with `/list-items`: respond with {listItems: []}
     // - url ends with `/books/${book.id}`: respond with {book}
     // 💰 window.fetch = async (url, config) => { /* handle stuff here*/ }
     // 💰 return Promise.resolve({ok: true, json: async () => ({ /* response data here */ })})
-    jest.spyOn(window, 'fetch').mockImplementation(async (url, config) => {
-      return Promise.resolve({
-        ok: true,
-        json: async () => {
-          if (url.endsWith('/bootstrap')) {
-            return {
-              user: {
-                ...user,
-                token
-              },
-              listItems: []
-            }
-          }
-
-          if (url.endsWith('/list-items')) {
-            return {listItems: []}
-          }
-
-          if (url.endsWith(`/books/${book.id}`)) {
-            return {book}
-          }
-
-          return Promise.reject(
-            new Error(`MUST HANDLE '${url}' with given config: ${config}`),
-          )
-        },
-      })
-    })
+    window.fetch = mockFetch
 
     // 🐨 "authenticate" the client by setting the auth.localStorageKey in localStorage to some string value
     window.localStorage.setItem(auth.localStorageKey, token)
@@ -62,7 +67,7 @@ describe('Book Screen', () => {
 
   afterAll(() => {
     window.localStorage.removeItem(auth.localStorageKey)
-    window.fetch.mockRestore()
+    window.fetch = originalFetch
   })
 
   afterEach(() => {
