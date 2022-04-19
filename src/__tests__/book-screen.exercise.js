@@ -56,9 +56,6 @@ describe('Book Screen', () => {
     // 💰 return Promise.resolve({ok: true, json: async () => ({ /* response data here */ })})
     window.fetch = mockFetch
 
-    // 🐨 "authenticate" the client by setting the auth.localStorageKey in localStorage to some string value
-    window.localStorage.setItem(auth.localStorageKey, token)
-
     // 🐨 update the URL to `/book/${book.id}`
     //   💰 window.history.pushState({}, 'page title', route)
     //   📜 https://developer.mozilla.org/en-US/docs/Web/API/History/pushState
@@ -66,13 +63,18 @@ describe('Book Screen', () => {
   })
 
   afterAll(() => {
-    window.localStorage.removeItem(auth.localStorageKey)
     window.fetch = originalFetch
   })
 
-  afterEach(() => {
+  beforeEach(() => {
+    // 🐨 "authenticate" the client by setting the auth.localStorageKey in localStorage to some string value
+    window.localStorage.setItem(auth.localStorageKey, token)
+  })
+
+  afterEach(async () => {
     // 🐨 after each test, clear the queryCache and auth.logout
     queryCache.clear()
+    await auth.logout()
   })
 
   test('renders all the book information', async () => {
@@ -85,6 +87,7 @@ describe('Book Screen', () => {
     // 💰 if (queryCache.isFetching or there are loading indicators) then throw an error...
     await waitForElementToBeRemoved(() => screen.getByLabelText(/loading/i))
 
+    screen.debug()
     // 🐨 assert the book's info is in the document
   })
 })
