@@ -3,13 +3,14 @@ import * as usersDB from 'test/data/users'
 import * as booksDB from 'test/data/books'
 import * as listItemsDB from 'test/data/list-items'
 import {buildBook} from 'test/generate'
+import {buildListItem} from 'test/generate'
+import {buildUser} from 'test/generate'
 
 import {
   render as rtlRender,
   screen,
   waitForElementToBeRemoved,
 } from '@testing-library/react'
-import {buildUser} from 'test/generate'
 import {AppProviders} from 'context'
 
 async function loadCompletion() {
@@ -56,7 +57,18 @@ async function saveBook(bookProperties) {
   return book
 }
 
+async function saveListItem(listItemProperties) {
+  await listItemsDB.create(buildListItem(listItemProperties))
+}
 // Export everything from react testing library
 export * from '@testing-library/react'
 // Overrides render function from the previous export
-export {getButton, queryButton, loadCompletion, loginAsUser, render, saveBook}
+export {
+  getButton,
+  queryButton,
+  loadCompletion,
+  loginAsUser,
+  render,
+  saveBook,
+  saveListItem,
+}
