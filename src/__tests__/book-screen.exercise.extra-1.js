@@ -15,35 +15,6 @@ import {AppProviders} from 'context'
 import {App} from 'app'
 
 describe('Book Screen', () => {
-  async function mockFetch(url, config) {
-    return Promise.resolve({
-      ok: true,
-      json: async () => {
-        if (url.endsWith('/bootstrap')) {
-          return {
-            user: {
-              ...user,
-              token,
-            },
-            listItems: [],
-          }
-        }
-
-        if (url.endsWith('/list-items')) {
-          return {listItems: []}
-        }
-
-        if (url.endsWith(`/books/${book.id}`)) {
-          return {book}
-        }
-
-        return Promise.reject(
-          new Error(`MUST HANDLE '${url}' with given config: ${config}`),
-        )
-      },
-    })
-  }
-
   const user = buildUser()
   const book = buildBook()
   const originalFetch = window.fetch
@@ -53,7 +24,6 @@ describe('Book Screen', () => {
   beforeAll(() => {
     jest.spyOn(window, 'fetch')
 
-    window.fetch = mockFetch
     window.history.pushState({}, 'Test Book Screen', route)
   })
 
