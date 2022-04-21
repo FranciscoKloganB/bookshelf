@@ -1,60 +1,17 @@
 // 🐨 here are the things you're going to need for this test:
 import * as React from 'react'
-import * as auth from 'auth-provider'
-import * as usersDB from 'test/data/users'
-import * as booksDB from 'test/data/books'
-import * as listItemsDB from 'test/data/list-items'
-import {render as rtlRender, screen, waitForElementToBeRemoved} from '@testing-library/react'
-import {queryCache} from 'react-query'
-import {buildUser, buildBook} from 'test/generate'
-import {AppProviders} from 'context'
+import {
+  loadCompletion,
+  loginAsUser,
+  getButton,
+  queryButton,
+  render,
+  saveBook,
+  screen,
+} from 'test/app-test-utils.exercise.js'
 import {App} from 'app'
 import {formatDate} from 'utils/misc'
 import userEvent from '@testing-library/user-event'
-
-async function loadCompletion() {
-  /**
-   * Since we are now waiting for the auth user as well as other
-   * data asynchronously, such as the book, we need to wait for more spinners
-   * to be removed from the page other than the initial "login" one which
-   * corresponded to the full page spinner
-   */
-  await waitForElementToBeRemoved(() => [
-    ...screen.queryAllByLabelText(/loading/i),
-    ...screen.queryAllByText(/loading/i),
-  ])
-}
-
-function getButton(config) {
-  return screen.getByRole('button', config)
-}
-
-function queryButton(config) {
-  return screen.queryByRole('button', config)
-}
-
-async function render(ui, options) {
-  const result = await rtlRender(ui, {wrapper: AppProviders, ...options})
-
-  await loadCompletion()
-
-  return result
-}
-
-async function loginAsUser(userProperties) {
-  const user = buildUser(userProperties)
-  await usersDB.create(user)
-  const authUser = await usersDB.authenticate(user)
-  window.localStorage.setItem(auth.localStorageKey, authUser.token)
-
-  return [user, authUser]
-}
-
-async function saveBook(bookProperties) {
-  const book = buildBook(bookProperties)
-  await booksDB.create(book)
-  return book
-}
 
 describe('Book Screen', () => {
   let book
@@ -65,18 +22,8 @@ describe('Book Screen', () => {
     window.history.pushState({}, 'Test Book Screen', `/book/${book.id}`)
   })
 
-  afterEach(async () => {
-    queryCache.clear()
-    await Promise.all([
-      auth.logout(),
-      usersDB.reset(),
-      booksDB.reset(),
-      listItemsDB.reset(),
-    ])
-  })
-
   test('renders all the book information', async () => {
-    await render(<App />, {wrapper: AppProviders})
+    await render(<App />)
 
     expect(screen.getByRole('img', {name: /book cover/i})).toHaveAttribute(
       'src',
