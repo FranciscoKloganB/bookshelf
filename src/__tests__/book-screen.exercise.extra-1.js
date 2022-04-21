@@ -4,14 +4,13 @@ import * as auth from 'auth-provider'
 import * as usersDB from 'test/data/users'
 import * as booksDB from 'test/data/books'
 import * as listItemsDB from 'test/data/list-items'
-import {render, screen, waitForElementToBeRemoved} from '@testing-library/react'
+import {render as rtlRender, screen, waitForElementToBeRemoved} from '@testing-library/react'
 import {queryCache} from 'react-query'
 import {buildUser, buildBook} from 'test/generate'
 import {AppProviders} from 'context'
 import {App} from 'app'
 import {formatDate} from 'utils/misc'
 import userEvent from '@testing-library/user-event'
-import { func } from 'prop-types'
 
 async function loadCompletion() {
   /**
@@ -32,6 +31,14 @@ function getButton(config) {
 
 function queryButton(config) {
   return screen.queryByRole('button', config)
+}
+
+async function render(ui, options) {
+  const result = await rtlRender(ui, {wrapper: AppProviders, ...options})
+
+  await loadCompletion()
+
+  return result
 }
 
 async function loginAsUser(userProperties) {
@@ -69,9 +76,7 @@ describe('Book Screen', () => {
   })
 
   test('renders all the book information', async () => {
-    render(<App />, {wrapper: AppProviders})
-
-    await loadCompletion()
+    await render(<App />, {wrapper: AppProviders})
 
     expect(screen.getByRole('img', {name: /book cover/i})).toHaveAttribute(
       'src',
@@ -94,9 +99,7 @@ describe('Book Screen', () => {
   })
 
   test('can create a list item for the book', async () => {
-    render(<App />, {wrapper: AppProviders})
-
-    await loadCompletion()
+    await render(<App/>)
 
     const addToListButton = getButton({name: /add to list/i})
     userEvent.click(addToListButton)
