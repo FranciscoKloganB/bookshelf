@@ -3,7 +3,8 @@
 // export * from './book-screen.exercise'
 // export * from './book-screen.exercise.extra-1'
 // export * from './book-screen.exercise.extra-2'
-export * from './book-screen.exercise.extra-5'
+// export * from './book-screen.exercise.extra-5'
+export * from './book-screen.exercise.extra-6'
 
 // 💯 Create mock server for all fetch requests
 // export * from './book-screen.extra-1'
