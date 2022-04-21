@@ -7,6 +7,7 @@ import {
   queryButton,
   render,
   saveBook,
+  saveListItem,
   screen,
 } from 'test/app-test-utils.exercise.js'
 import {App} from 'app'
@@ -15,9 +16,11 @@ import userEvent from '@testing-library/user-event'
 
 describe('Book Screen', () => {
   let book
+  let user
 
   beforeEach(async () => {
-    await loginAsUser()
+    ([user] = await loginAsUser());
+
     book = await saveBook()
     window.history.pushState({}, 'Test Book Screen', `/book/${book.id}`)
   })
@@ -46,7 +49,7 @@ describe('Book Screen', () => {
   })
 
   test('can create a list item for the book', async () => {
-    await render(<App/>)
+    await render(<App />)
 
     const addToListButton = getButton({name: /add to list/i})
     userEvent.click(addToListButton)
@@ -62,5 +65,18 @@ describe('Book Screen', () => {
     expect(screen.queryByLabelText(/start date/i)).toHaveTextContent(
       formatDate(Date.now()),
     )
+  })
+
+  describe('given a book as a list item', () => {
+    let listItem
+
+    beforeEach(async () => {
+      listItem = await saveListItem({owner: user, book, finishDate: null})
+    })
+
+    test('can remove a list item for the book', async () => {})
+
+    test.todo('can mark a list item as read')
+    test.todo('can edit a note')
   })
 })

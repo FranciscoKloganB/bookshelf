@@ -4,7 +4,11 @@ import * as auth from 'auth-provider'
 import * as usersDB from 'test/data/users'
 import * as booksDB from 'test/data/books'
 import * as listItemsDB from 'test/data/list-items'
-import {render as rtlRender, screen, waitForElementToBeRemoved} from '@testing-library/react'
+import {
+  render as rtlRender,
+  screen,
+  waitForElementToBeRemoved,
+} from '@testing-library/react'
 import {queryCache} from 'react-query'
 import {buildUser, buildBook} from 'test/generate'
 import {AppProviders} from 'context'
@@ -99,7 +103,7 @@ describe('Book Screen', () => {
   })
 
   test('can create a list item for the book', async () => {
-    await render(<App/>)
+    await render(<App />)
 
     const addToListButton = getButton({name: /add to list/i})
     userEvent.click(addToListButton)
