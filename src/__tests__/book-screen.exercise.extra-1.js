@@ -13,6 +13,8 @@ import {queryCache} from 'react-query'
 import {buildUser, buildBook} from 'test/generate'
 import {AppProviders} from 'context'
 import {App} from 'app'
+import {formatDate} from 'utils/misc'
+import userEvent from '@testing-library/user-event'
 
 describe('Book Screen', () => {
   let authUser
@@ -85,5 +87,51 @@ describe('Book Screen', () => {
 
     expect(screen.queryByRole('radio', {name: /star/i})).not.toBeInTheDocument()
     expect(screen.queryByLabelText(/start date/i)).not.toBeInTheDocument()
+  })
+
+  test('can create a list item for the book', async () => {
+      render(<App />, {wrapper: AppProviders})
+
+      await waitForElementToBeRemoved(() => [
+        ...screen.queryAllByLabelText(/loading/i),
+        ...screen.queryAllByText(/loading/i),
+      ])
+
+      const addToListButton = screen.getByRole('button', {
+        name: /add to list/i,
+      })
+      userEvent.click(addToListButton)
+      expect(addToListButton).toBeDisabled()
+
+      await waitForElementToBeRemoved(() => [
+        ...screen.queryAllByLabelText(/loading/i),
+        ...screen.queryAllByText(/loading/i),
+      ])
+
+      screen.debug()
+
+      expect(
+        screen.queryByRole('button', {name: /mark as read/i}),
+      ).toBeInTheDocument()
+
+      expect(
+        screen.queryByRole('button', {name: /remove from list/i}),
+      ).toBeInTheDocument()
+
+      expect(
+        screen.queryByRole('button', {name: /mark as unread/i}),
+      ).not.toBeInTheDocument()
+
+      expect(
+        screen.queryByRole('radio', {name: /star/i}),
+      ).not.toBeInTheDocument()
+
+      expect(
+        screen.queryByRole('textbox', {name: /notes/i}),
+      ).toBeInTheDocument()
+
+      expect(screen.queryByLabelText(/start date/i)).toHaveTextContent(
+        formatDate(Date.now()),
+      )
   })
 })
