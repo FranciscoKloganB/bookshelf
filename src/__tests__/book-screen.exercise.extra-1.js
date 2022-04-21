@@ -15,35 +15,48 @@ import {AppProviders} from 'context'
 import {App} from 'app'
 
 describe('Book Screen', () => {
-  const user = buildUser()
-  const book = buildBook()
-  const originalFetch = window.fetch
-  const route = `/book/${book.id}`
-  const token = 'token'
+  let authUser
+  let user
+  let book
+  let route
 
-  beforeAll(() => {
-    jest.spyOn(window, 'fetch')
+  beforeEach(async () => {
+    user = buildUser()
+    await usersDB.create(user)
+
+    book = buildBook()
+    route = `/book/${book.id}`
+    await booksDB.create(book)
+
+    authUser = await usersDB.authenticate(user)
+    window.localStorage.setItem(auth.localStorageKey, authUser.token)
 
     window.history.pushState({}, 'Test Book Screen', route)
   })
 
-  afterAll(() => {
-    window.fetch = originalFetch
-  })
-
-  beforeEach(() => {
-    window.localStorage.setItem(auth.localStorageKey, token)
-  })
-
   afterEach(async () => {
     queryCache.clear()
-    await auth.logout()
+    await Promise.all([
+      auth.logout(),
+      usersDB.reset(),
+      booksDB.reset(),
+      listItemsDB.reset(),
+    ])
   })
 
   test('renders all the book information', async () => {
     render(<App />, {wrapper: AppProviders})
 
-    await waitForElementToBeRemoved(() => screen.getByLabelText(/loading/i))
+    /**
+     * Since we are now waiting for the auth user as well as other
+     * data asynchronously, such as the book, we need to wait for more spinners
+     * to be removed from the page other than the initial "login" one which
+     * corresponded to the full page spinner
+     */
+    await waitForElementToBeRemoved(() => [
+      ...screen.queryAllByLabelText(/loading/i),
+      ...screen.queryAllByText(/loading/i),
+    ])
 
     expect(screen.getByRole('img', {name: /book cover/i})).toHaveAttribute(
       'src',
