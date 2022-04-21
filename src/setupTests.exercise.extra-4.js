@@ -19,3 +19,7 @@ afterEach(async () => {
     listItemsDB.reset(),
   ])
 })
+// Ensure we are using real-timers after any test that uses jest.useFakeTimers()
+beforeEach(() => {
+  jest.useRealTimers()
+})

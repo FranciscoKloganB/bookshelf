@@ -154,9 +154,10 @@ test('can edit a note', async () => {
 
   // wait for the loading spinner to show up
   await screen.findByLabelText(/loading/i)
-  // wait for the loading spinner to go away
+  // wait for the loading spinner to go away - only works because are using jest.useFakerTimers()
   await waitForLoadingToFinish()
-
+  // if we had no jest.useFakeTimers() we would remove line above and use this instead:
+  // await waitFor(() => expect(notesTextarea).toHaveValue(newNotes))
   expect(notesTextarea).toHaveValue(newNotes)
 
   expect(await listItemsDB.read(listItem.id)).toMatchObject({
