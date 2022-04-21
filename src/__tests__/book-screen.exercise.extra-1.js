@@ -4,17 +4,34 @@ import * as auth from 'auth-provider'
 import * as usersDB from 'test/data/users'
 import * as booksDB from 'test/data/books'
 import * as listItemsDB from 'test/data/list-items'
-import {
-  render,
-  screen,
-  waitForElementToBeRemoved,
-} from '@testing-library/react'
+import {render, screen, waitForElementToBeRemoved} from '@testing-library/react'
 import {queryCache} from 'react-query'
 import {buildUser, buildBook} from 'test/generate'
 import {AppProviders} from 'context'
 import {App} from 'app'
 import {formatDate} from 'utils/misc'
 import userEvent from '@testing-library/user-event'
+
+async function loadCompletion() {
+  /**
+   * Since we are now waiting for the auth user as well as other
+   * data asynchronously, such as the book, we need to wait for more spinners
+   * to be removed from the page other than the initial "login" one which
+   * corresponded to the full page spinner
+   */
+  await waitForElementToBeRemoved(() => [
+    ...screen.queryAllByLabelText(/loading/i),
+    ...screen.queryAllByText(/loading/i),
+  ])
+}
+
+function getButton(config) {
+  return screen.getByRole('button', config)
+}
+
+function queryButton(config) {
+  return screen.queryByRole('button', config)
+}
 
 describe('Book Screen', () => {
   let authUser
@@ -49,16 +66,7 @@ describe('Book Screen', () => {
   test('renders all the book information', async () => {
     render(<App />, {wrapper: AppProviders})
 
-    /**
-     * Since we are now waiting for the auth user as well as other
-     * data asynchronously, such as the book, we need to wait for more spinners
-     * to be removed from the page other than the initial "login" one which
-     * corresponded to the full page spinner
-     */
-    await waitForElementToBeRemoved(() => [
-      ...screen.queryAllByLabelText(/loading/i),
-      ...screen.queryAllByText(/loading/i),
-    ])
+    await loadCompletion()
 
     expect(screen.getByRole('img', {name: /book cover/i})).toHaveAttribute(
       'src',
@@ -69,69 +77,35 @@ describe('Book Screen', () => {
     expect(screen.getByText(book.publisher)).toBeInTheDocument()
     expect(screen.getByText(book.synopsis)).toBeInTheDocument()
 
-    expect(
-      screen.getByRole('button', {name: /add to list/i}),
-    ).toBeInTheDocument()
-    expect(
-      screen.queryByRole('button', {name: /remove from list/i}),
-    ).not.toBeInTheDocument()
-    expect(
-      screen.queryByRole('button', {name: /mark as read/i}),
-    ).not.toBeInTheDocument()
-    expect(
-      screen.queryByRole('button', {name: /mark as unread/i}),
-    ).not.toBeInTheDocument()
+    expect(getButton({name: /add to list/i})).toBeInTheDocument()
+    expect(queryButton({name: /remove from list/i})).not.toBeInTheDocument()
+    expect(queryButton({name: /mark as read/i})).not.toBeInTheDocument()
+    expect(queryButton({name: /mark as unread/i})).not.toBeInTheDocument()
+    expect(screen.queryByRole('radio', {name: /star/i})).not.toBeInTheDocument()
+    expect(screen.queryByLabelText(/start date/i)).not.toBeInTheDocument()
     expect(
       screen.queryByRole('textbox', {name: /notes/i}),
     ).not.toBeInTheDocument()
-
-    expect(screen.queryByRole('radio', {name: /star/i})).not.toBeInTheDocument()
-    expect(screen.queryByLabelText(/start date/i)).not.toBeInTheDocument()
   })
 
   test('can create a list item for the book', async () => {
-      render(<App />, {wrapper: AppProviders})
+    render(<App />, {wrapper: AppProviders})
 
-      await waitForElementToBeRemoved(() => [
-        ...screen.queryAllByLabelText(/loading/i),
-        ...screen.queryAllByText(/loading/i),
-      ])
+    await loadCompletion()
 
-      const addToListButton = screen.getByRole('button', {
-        name: /add to list/i,
-      })
-      userEvent.click(addToListButton)
-      expect(addToListButton).toBeDisabled()
+    const addToListButton = getButton({name: /add to list/i})
+    userEvent.click(addToListButton)
+    expect(addToListButton).toBeDisabled()
 
-      await waitForElementToBeRemoved(() => [
-        ...screen.queryAllByLabelText(/loading/i),
-        ...screen.queryAllByText(/loading/i),
-      ])
+    await loadCompletion()
 
-      screen.debug()
-
-      expect(
-        screen.queryByRole('button', {name: /mark as read/i}),
-      ).toBeInTheDocument()
-
-      expect(
-        screen.queryByRole('button', {name: /remove from list/i}),
-      ).toBeInTheDocument()
-
-      expect(
-        screen.queryByRole('button', {name: /mark as unread/i}),
-      ).not.toBeInTheDocument()
-
-      expect(
-        screen.queryByRole('radio', {name: /star/i}),
-      ).not.toBeInTheDocument()
-
-      expect(
-        screen.queryByRole('textbox', {name: /notes/i}),
-      ).toBeInTheDocument()
-
-      expect(screen.queryByLabelText(/start date/i)).toHaveTextContent(
-        formatDate(Date.now()),
-      )
+    expect(queryButton({name: /mark as read/i})).toBeInTheDocument()
+    expect(queryButton({name: /remove from list/i})).toBeInTheDocument()
+    expect(queryButton({name: /mark as unread/i})).not.toBeInTheDocument()
+    expect(screen.queryByRole('radio', {name: /star/i})).not.toBeInTheDocument()
+    expect(screen.queryByRole('textbox', {name: /notes/i})).toBeInTheDocument()
+    expect(screen.queryByLabelText(/start date/i)).toHaveTextContent(
+      formatDate(Date.now()),
+    )
   })
 })
