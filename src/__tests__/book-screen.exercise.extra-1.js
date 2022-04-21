@@ -11,6 +11,7 @@ import {AppProviders} from 'context'
 import {App} from 'app'
 import {formatDate} from 'utils/misc'
 import userEvent from '@testing-library/user-event'
+import { func } from 'prop-types'
 
 async function loadCompletion() {
   /**
@@ -33,24 +34,28 @@ function queryButton(config) {
   return screen.queryByRole('button', config)
 }
 
+async function loginAsUser(userProperties) {
+  const user = buildUser(userProperties)
+  await usersDB.create(user)
+  const authUser = await usersDB.authenticate(user)
+  window.localStorage.setItem(auth.localStorageKey, authUser.token)
+
+  return [user, authUser]
+}
+
+async function saveBook(bookProperties) {
+  const book = buildBook(bookProperties)
+  await booksDB.create(book)
+  return book
+}
+
 describe('Book Screen', () => {
-  let authUser
-  let user
   let book
-  let route
 
   beforeEach(async () => {
-    user = buildUser()
-    await usersDB.create(user)
-
-    book = buildBook()
-    route = `/book/${book.id}`
-    await booksDB.create(book)
-
-    authUser = await usersDB.authenticate(user)
-    window.localStorage.setItem(auth.localStorageKey, authUser.token)
-
-    window.history.pushState({}, 'Test Book Screen', route)
+    await loginAsUser()
+    book = await saveBook()
+    window.history.pushState({}, 'Test Book Screen', `/book/${book.id}`)
   })
 
   afterEach(async () => {
