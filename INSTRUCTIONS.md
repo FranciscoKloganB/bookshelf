@@ -2,7 +2,25 @@
 
 ## 📝 Your Notes
 
-Elaborate on your learnings here in `INSTRUCTIONS.md`
+In this exercise we have learned a lot. We began by setting up integration
+tests by doing a nice, but flawed, mock of `window.fetch`, which we eventually
+replaced by `mws` servers. Other than mocking requests with `mws`, we mocked
+our database, to avoid hard-coding the responses of `mws` like we did in unit
+testing. We populate that mock database using factory methods, that we created,
+that can be handilly tweaked or used with good defaults provided by `faker` lib.
+
+To do integration testing we want to `render` our `App` component, just like
+we do in the real application, including with all providers. Since our
+application requires authentication to work, we also need to reverse-engineer
+our authentication flow, in order to mock the user getting a token. In our
+particular use case, mocking the token was as simple as storing the
+`access token` in our local storage.
+
+Other than that, we did some interesting testing and we learned about
+concurrency problems, which are easily fixed by using `jest.useFakeTimers` hook.
+Unfortunatly, `jest.useFakeTimers` reset (`jest.useRealTimers`) does not
+interact very well with `react-query` lib (_we needed to add a global config to fix the issue_),
+instead of just resetting with the the inverse hook on a global `afterEach`.
 
 ## Background
 
