@@ -176,7 +176,9 @@ describe('when an error occurs', () => {
 
     userEvent.clear(notesTextarea)
     userEvent.type(notesTextarea, newNotes)
+    // wait for spinner to show up (as user types and there is a debounce)
     await screen.findByLabelText(/loading/i)
+    // wait for spinner to go away
     await waitForLoadingToFinish()
 
     expect(screen.getByRole('alert').textContent).toMatchInlineSnapshot(
