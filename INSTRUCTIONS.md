@@ -27,6 +27,20 @@ specific tests. Consequently, we decided to create dedicated utilities for
 specific test files which re-use a more generic utility. We are talking,
 particularly, about `render` utilities in `app-test-utils` files.
 
+We learned on the last extra-credit, that using jest `describe` blocks within
+the same test file split tests by similarity on the same test file is not
+very useful just for the sake of it. The true purpose of `describe` is to
+ensure any mocks that are applied within it's body are only valid within that
+body and do not affect tests outside of it. So, as a side effect, grouping
+tests by similarity with `describe`, might be side-effect-good, but if we
+really need to group tests by similarity, creating different test files, is
+better because it allows the tests to run in parallel, thus ending faster.
+
+In this last extra-credit, we also mocked `console.error` to avoid polluting
+our test output when our tests invoke `console.error`. Finally, we added a
+`msw` mock (a new handler) to test cases where our backends respond with `4xx`
+http codes and make respective assertions.
+
 ## Background
 
 Let's take a step back and pretend that testing doesn't exist. Imagine you're

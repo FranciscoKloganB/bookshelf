@@ -1,13 +1,16 @@
+import faker from 'faker'
 import * as listItemsDB from 'test/data/list-items'
-
 import {
   renderBookScreen,
   screen,
-  waitForLoadingToFinish,
   userEvent,
+  waitForLoadingToFinish,
 } from 'test/app-test-utils'
-import faker from 'faker'
 import {formatDate} from 'utils/misc'
+import {buildBook} from 'test/generate'
+import {server, rest} from 'test/server'
+
+const apiURL = process.env.REACT_APP_API_URL
 
 test('renders all the book information', async () => {
   const {book} = await renderBookScreen({listItem: null})
@@ -134,8 +137,53 @@ test('can edit a note', async () => {
   })
 })
 
-test('shows an error message when the book fails to load', async () => {
+describe('when an error occurs', () => {
+  beforeAll(() => {
+    jest.spyOn(console, 'error')
+  })
 
+  afterAll(() => {
+    console.error.mockRestore()
+  })
+
+  test('shows an error message when the book fails to load', async () => {
+    const book = buildBook({id: 'dummy-id'})
+    await renderBookScreen({book, listItem: null})
+
+    expect(
+      (await screen.findByRole('alert')).textContent,
+    ).toMatchInlineSnapshot(`"There was an error: Book not found"`)
+    expect(console.error).toHaveBeenCalled()
+  })
+
+  test('note update failures are displayed', async () => {
+    // using fake timers to skip debounce time
+    jest.useFakeTimers()
+    const {listItem} = await renderBookScreen()
+
+    const newNotes = faker.lorem.words()
+    const notesTextarea = screen.getByRole('textbox', {name: /notes/i})
+
+    const testErrorMessage = '__test_error_message__'
+    server.use(
+      rest.put(`${apiURL}/list-items/:listItemId`, async (req, res, ctx) => {
+        return res(
+          ctx.status(400),
+          ctx.json({status: 400, message: testErrorMessage}),
+        )
+      }),
+    )
+
+    userEvent.clear(notesTextarea)
+    userEvent.type(notesTextarea, newNotes)
+    await screen.findByLabelText(/loading/i)
+    await waitForLoadingToFinish()
+
+    expect(screen.getByRole('alert').textContent).toMatchInlineSnapshot(
+      `"There was an error: __test_error_message__"`,
+    )
+    expect(await listItemsDB.read(listItem.id)).not.toMatchObject({
+      notes: newNotes
+    })
+  })
 })
-
-test.todo('note update failures are displayed')

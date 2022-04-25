@@ -68,6 +68,9 @@ const waitForLoadingToFinish = () =>
   ])
 
 export * from '@testing-library/react'
+export * as booksDB from 'test/data/books'
+export * as listItemsDB from 'test/data/list-items'
+export * as usersDB from 'test/data/users'
 export {
   render,
   renderBookScreen,
