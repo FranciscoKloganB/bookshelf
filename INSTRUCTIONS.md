@@ -22,6 +22,11 @@ Unfortunatly, `jest.useFakeTimers` reset (`jest.useRealTimers`) does not
 interact very well with `react-query` lib (_we needed to add a global config to fix the issue_),
 instead of just resetting with the the inverse hook on a global `afterEach`.
 
+Eventually, we realized that some of our test utilities were too tied with
+specific tests. Consequently, we decided to create dedicated utilities for
+specific test files which re-use a more generic utility. We are talking,
+particularly, about `render` utilities in `app-test-utils` files.
+
 ## Background
 
 Let's take a step back and pretend that testing doesn't exist. Imagine you're
