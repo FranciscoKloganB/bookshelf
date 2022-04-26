@@ -2,7 +2,27 @@
 
 ## 📝 Your Notes
 
-Elaborate on your learnings here in `INSTRUCTIONS.md`
+For this final module, we practised E2E testing using Cypress. Writing tests
+with this Framework (Cypress) is marvellous. In combination with
+`react-testing-library` it is even easier to interact with the DOM and gives us
+a benefit: having a syntax that resembles our integration and component testing
+assertions!
+
+E2E testing gives us the best confidence that our code works the way it should
+and, turns out, they are very eaasy to write. However, they take a long time
+to execute, so they are not the best to give immediate feedback during
+development. That is why we write unit and sometimes component tests.
+Furthermore, when E2E tests fail, they usually indicate something is wrong
+with our code (or the environment where it runs on) and it is not always easy
+to pinpoint the source of the problem. Hence, E2E tests are usually written
+to test the happy path. The unhappy path, should be covered by integration tests
+which also give us good confidence, but execute way faster and are usually
+great to pinpoint probblems!
+
+Summarizing, no testing layer is perfect. They all complement each other and
+each makes a trade-off between implementation effort and time to first feedback
+versus confidence, where confidence is provided as a function of the amount or
+lack-of mocks in the test.
 
 ## Background
 
